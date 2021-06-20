@@ -20,10 +20,7 @@ namespace Input
                 if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit))
                 {
                     ISelectableItem selectable = hit.collider.gameObject.GetComponent<ISelectableItem>();
-                    if (selectable != null)
-                    {
-                        Debug.Log(selectable.Name);
-                    }
+                    selectable?.Select();
                 }
             }
         }

@@ -6,6 +6,8 @@ namespace Abstractions
     {
         event Action OnSelect;
         string Name { get; }
+        int CurrentHealth { get; }
+        int MaxHealth { get; }
         void Select();
     }
 
