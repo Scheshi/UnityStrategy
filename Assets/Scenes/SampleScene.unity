@@ -406,10 +406,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8009ce0af46160047ba66fad6ac54645, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ce72898c66de3f408fa576877ef0170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 963194227}
+  startBuilding: {fileID: 1609894451}
 --- !u!1 &1609894450
 GameObject:
   m_ObjectHideFlags: 0
