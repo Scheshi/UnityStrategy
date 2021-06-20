@@ -1,5 +1,4 @@
 using Abstractions;
-using UnityEngine;
 
 
 namespace Core.Buildings
@@ -16,7 +15,7 @@ namespace Core.Buildings
 
         private void OnSelectBuild()
         {
-            Debug.Log("Select Build");
+            //TODO:
         }
     }
 }

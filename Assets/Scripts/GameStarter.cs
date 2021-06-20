@@ -1,5 +1,6 @@
 using Core.Buildings;
 using Input;
+using UI.Presenter;
 using UnityEngine;
 
 
@@ -10,6 +11,7 @@ public class GameStarter : MonoBehaviour
     private InputView _input;
     private BuildingController _startBuildingController;
     private BuildingController _secondBuildingController;
+    private Presenter _presenter;
 
     private void Awake()
     {
@@ -17,5 +19,6 @@ public class GameStarter : MonoBehaviour
         _input.Init();
         _startBuildingController = new BuildingController(startBuilding);
         _secondBuildingController = new BuildingController(secondBuilding);
+        _presenter = new Presenter();
     }
 }
