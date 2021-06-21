@@ -33,10 +33,6 @@ namespace Core.Buildings
             Material[] materials = new Material[2];
             materials[0] = _outlineMaterial;
             materials[1] = material;
-            /*for (int i = 1; i < _renderer.materials.Length; i++)
-            {
-                materials[i] = _renderer.materials[i-1];
-            }*/
             _renderer.materials = materials;
             OnSelect.Invoke();
         }
