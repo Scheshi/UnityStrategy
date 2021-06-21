@@ -10,7 +10,6 @@ public class GameStarter : MonoBehaviour
     [SerializeField] private TestBuilding secondBuilding;
     private InputView _input;
     private BuildingController _startBuildingController;
-    private BuildingController _secondBuildingController;
     private Presenter _presenter;
 
     private void Awake()
@@ -18,7 +17,7 @@ public class GameStarter : MonoBehaviour
         _input = new GameObject("Input").AddComponent<InputView>();
         _input.Init();
         _startBuildingController = new BuildingController(startBuilding);
-        _secondBuildingController = new BuildingController(secondBuilding);
+        //_secondBuildingController = new BuildingController(secondBuilding);
         _presenter = new Presenter();
     }
 }
