@@ -20,6 +20,7 @@ namespace Input
         {
             if (UnityEngine.Input.GetButtonDown("Fire1"))
             {
+                _model.Value?.Unselect();
                 if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit))
                 {
                     if (hit.collider.gameObject.layer != LayerMask.NameToLayer("UI"))

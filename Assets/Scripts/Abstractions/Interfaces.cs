@@ -9,6 +9,7 @@ namespace Abstractions
         int CurrentHealth { get; }
         int MaxHealth { get; }
         void Select();
+        void Unselect();
     }
 
     public interface IBuilding : ISelectableItem
