@@ -1,4 +1,5 @@
 using Abstractions;
+using UI.Model;
 using UnityEngine;
 
 
@@ -6,23 +7,27 @@ namespace Input
 {
     public class InputView : MonoBehaviour
     {
-        [SerializeField]private Camera mainCamera;
+        [SerializeField] private Camera mainCamera;
+        private SelectableModel _model;
 
         public void Init()
         {
             mainCamera = Camera.main;
+            _model = Resources.Load<SelectableModel>("Config/SelectableModel");
         }
         
         private void Update()
         {
             if (UnityEngine.Input.GetButtonDown("Fire1"))
             {
+                _model.Value?.Unselect();
                 if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit))
                 {
-                    ISelectableItem selectable = hit.collider.gameObject.GetComponent<ISelectableItem>();
-                    if (selectable != null)
+                    if (hit.collider.gameObject.layer != LayerMask.NameToLayer("UI"))
                     {
-                        Debug.Log(selectable.Name);
+                        ISelectableItem selectable = hit.collider.gameObject.GetComponent<ISelectableItem>();
+                        selectable?.Select();
+                        _model.SelectItem(selectable);
                     }
                 }
             }
