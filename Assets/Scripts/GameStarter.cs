@@ -1,3 +1,4 @@
+using System;
 using Commands;
 using Core.Buildings;
 using Input;
@@ -21,5 +22,10 @@ public class GameStarter : MonoBehaviour
         startBuilding.SetExecutors(new ProduceUnitCommandExecutor());
         //_secondBuildingController = new BuildingController(secondBuilding);
         _presenter = new Presenter();
+    }
+
+    private void OnDestroy()
+    {
+        _presenter.Dispose();
     }
 }

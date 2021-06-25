@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class ControlPanelView : MonoBehaviour
 {
+    public event Action<ICommandExecutor> OnClick = (executor => { }); 
+    
     [SerializeField] private Button attackButton;
     [SerializeField] private Button moveButton;
     [SerializeField] private Button cancelButton;
@@ -45,6 +47,7 @@ public class ControlPanelView : MonoBehaviour
         foreach (var sch in _switchDictionary)
         {
             sch.Value.gameObject.SetActive(false);
+            sch.Value.onClick.RemoveAllListeners();
         }
     }
 
@@ -58,6 +61,8 @@ public class ControlPanelView : MonoBehaviour
                 if (button != null)
                 {
                     button.gameObject.SetActive(true);
+                    var i1 = i;
+                    button.onClick.AddListener(() => OnClick.Invoke(executors[i1]));
                 }
             }
         }

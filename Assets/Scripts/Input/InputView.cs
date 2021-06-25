@@ -20,14 +20,12 @@ namespace Input
         {
             if (UnityEngine.Input.GetButtonDown("Fire1"))
             {
-                _model.Value?.Unselect();
-                if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit))
+                if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
                 {
-                    if (hit.collider.gameObject.layer != LayerMask.NameToLayer("UI"))
+                    if (!hit.collider.gameObject.CompareTag("NotRaycast"))
                     {
                         ISelectableItem selectable = hit.collider.gameObject.GetComponent<ISelectableItem>();
-                        selectable?.Select();
-                        _model.SelectItem(selectable);
+                        _model.SelectItem(selectable); 
                     }
                 }
             }

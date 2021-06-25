@@ -1,4 +1,5 @@
 using Abstractions;
+using UnityEngine;
 
 
 namespace Commands
@@ -7,7 +8,7 @@ namespace Commands
     {
         protected override void ExecuteTypeCommand(ICreateUnitCommand command)
         {
-            command.InstantiateUnit();
+            Object.Instantiate(command.InstantiateUnit());
         }
     }
 }

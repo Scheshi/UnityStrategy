@@ -13,8 +13,13 @@ namespace UI.Model
 
         public void SelectItem(ISelectableItem value)
         {
-            _value = value;
-            _onSetItem.Invoke(value);
+            if (value != null)
+            {
+                _value?.Unselect();
+                _value = value;
+                _value.Select();
+                _onSetItem.Invoke(value);
+            }
         }
 
         public void SubscriptionOnSelect(Action<ISelectableItem> onSetItem)
