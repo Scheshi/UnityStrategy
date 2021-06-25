@@ -3,7 +3,7 @@ using Abstractions;
 
 namespace Core.Buildings
 {
-    public class BuildingController
+    public class BuildingController: IController
     {
         private IBuilding _view;
 
@@ -17,5 +17,9 @@ namespace Core.Buildings
         {
             //TODO:
         }
+    }
+
+    public interface IController
+    {
     }
 }

@@ -7,7 +7,7 @@ namespace Commands
     {
         public GameObject InstantiateUnit()
         {
-            Debug.Log("Create unity");
+            Debug.Log("Create unit");
             return null;
         }
     }

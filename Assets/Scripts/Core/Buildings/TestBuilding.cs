@@ -18,7 +18,8 @@ namespace Core.Buildings
         private Material[] _defaultMaterials;
         private Meshes[] _meshes;
         private int _currentHealth;
-    
+
+        public ICommandExecutor[] Executors { get; private set; }
         public event Action OnSelect = () => { };
         public string Name => itemName;
         public int CurrentHealth => _currentHealth;
@@ -54,6 +55,11 @@ namespace Core.Buildings
             {
                 _meshes[i].Renderer.material = _meshes[i].DefaultMaterial;
             }
+        }
+
+        public void SetExecutors(params ICommandExecutor[] executors)
+        {
+            Executors = executors;
         }
     }
 }

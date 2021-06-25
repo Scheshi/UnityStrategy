@@ -1,3 +1,4 @@
+using Commands;
 using Core.Buildings;
 using Input;
 using UI.Presenter;
@@ -17,6 +18,7 @@ public class GameStarter : MonoBehaviour
         _input = new GameObject("Input").AddComponent<InputView>();
         _input.Init();
         _startBuildingController = new BuildingController(startBuilding);
+        startBuilding.SetExecutors(new ProduceUnitCommandExecutor());
         //_secondBuildingController = new BuildingController(secondBuilding);
         _presenter = new Presenter();
     }

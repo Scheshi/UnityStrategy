@@ -8,25 +8,35 @@ namespace UI.Presenter
     public class Presenter
     {
         private SelectableModel _model;
-        private ControlPanelView _view;
+        private InfoPanelView _info;
+        private ControlPanelView _control;
 
         public Presenter()
         {
             _model = Resources.Load<SelectableModel>("Config/SelectableModel");
             _model.SubscriptionOnSelect(OnChangeItem);
-            _view = Object.FindObjectOfType<ControlPanelView>();
+            _info = Object.FindObjectOfType<InfoPanelView>();
+            _control = Object.FindObjectOfType<ControlPanelView>();
+            _info.Reset();
         }
 
-        public void OnChangeItem(ISelectableItem item)
+        private void OnChangeItem(ISelectableItem item)
         {
             if (item != null)
             {
-                _view.SetInfo(null, item.Name, item.CurrentHealth, item.MaxHealth);
+                _info.SetInfo(null, item.Name, item.CurrentHealth, item.MaxHealth);
+                SetButtons(item);
             }
             else
             {
-                _view.Reset();
+                _info.Reset();
             }
+        }
+
+        private void SetButtons(ISelectableItem item)
+        {
+            _control.ClearButtons();
+            _control.SetButtons(item.Executors);
         }
     }
 }

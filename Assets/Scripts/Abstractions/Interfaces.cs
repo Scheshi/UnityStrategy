@@ -4,6 +4,7 @@ namespace Abstractions
 {
     public interface ISelectableItem
     {
+        ICommandExecutor[] Executors { get; }
         event Action OnSelect;
         string Name { get; }
         int CurrentHealth { get; }
