@@ -1,11 +1,12 @@
 using Abstractions;
 using UnityEngine;
+using Utils;
 
 namespace Commands
 {
     public class ProduceUnitCommand: ICreateUnitCommand
     {
-        private GameObject _unitPrefab;
+        [InjectAsset("name")]private GameObject _unitPrefab;
         public GameObject InstantiateUnit()
         {
             Debug.Log("Create unit");
