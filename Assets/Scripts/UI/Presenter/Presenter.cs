@@ -4,6 +4,7 @@ using Commands;
 using UI.Model;
 using UI.View;
 using UnityEngine;
+using Utils;
 using Object = UnityEngine.Object;
 
 
@@ -29,7 +30,9 @@ namespace UI.Presenter
         {
             if (executor is CommandExecutorBase<ICreateUnitCommand> unitCreater)
             {
-                unitCreater.Execute(new ProduceUnitCommand());
+                AssetCollection collection = Resources.Load<AssetCollection>("Config/Collection");
+                unitCreater.Execute(collection.InjectAsset(new ProduceUnitCommand()));
+                Resources.UnloadAsset(collection);
             }
         }
 

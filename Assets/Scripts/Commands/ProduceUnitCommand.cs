@@ -6,7 +6,8 @@ namespace Commands
 {
     public class ProduceUnitCommand: ICreateUnitCommand
     {
-        [InjectAsset("name")]private GameObject _unitPrefab;
+        [InjectAsset("PT_Medieval_Male_Peasant_01_e")]
+        private GameObject _unitPrefab;
         public GameObject InstantiateUnit()
         {
             Debug.Log("Create unit");
