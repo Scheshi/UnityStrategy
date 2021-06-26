@@ -1,45 +1,70 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Abstractions;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace UI.View
+public class ControlPanelView : MonoBehaviour
 {
-    public class ControlPanelView: MonoBehaviour
+    public event Action<ICommandExecutor> OnClick = (executor => { }); 
+    
+    [SerializeField] private Button attackButton;
+    [SerializeField] private Button moveButton;
+    [SerializeField] private Button cancelButton;
+    [SerializeField] private Button unitProduceButton;
+
+    private Dictionary<Type, Button> _switchDictionary;
+    
+    // Start is called before the first frame update
+    void Start()
     {
-        [SerializeField] private Image icon;
-        [SerializeField] private Text textName;
-        [SerializeField] private Slider healthBar;
+        _switchDictionary = new Dictionary<Type, Button>()
+        {
+            {
+                typeof(CommandExecutorBase<IAttackCommand>),
+                attackButton
+            },
+            {
+                typeof(CommandExecutorBase<IMoveCommand>),
+                moveButton
+            },
+            {
+                typeof(CommandExecutorBase<ICreateUnitCommand>),
+                unitProduceButton
+            },
+            {
+                typeof(CommandExecutorBase<ICancelCommand>),
+                cancelButton
+            }
+        };
+        ClearButtons();
+    }
 
-        private void Start()
+    public void ClearButtons()
+    {
+        foreach (var sch in _switchDictionary)
         {
-            Reset();
+            sch.Value.gameObject.SetActive(false);
+            sch.Value.onClick.RemoveAllListeners();
         }
-        
-        public void SetInfo(Sprite itemIcon, string itemName, float healthPercent)
-        {
-            icon.gameObject.SetActive(true);
-            textName.gameObject.SetActive(true);
-            healthBar.gameObject.SetActive(true);
-            icon.sprite = itemIcon;
-            textName.text = itemName;
-            healthBar.value = healthPercent;
-        }
+    }
 
-        public void SetInfo(Sprite itemIcon, string itemName, int health, int maxHealth)
+    public void SetButtons(params ICommandExecutor[] executors)
+    {
+        if (executors != null && executors.Length > 0)
         {
-            icon.gameObject.SetActive(true);
-            textName.gameObject.SetActive(true);
-            healthBar.gameObject.SetActive(true);
-            icon.sprite = itemIcon;
-            textName.text = itemName;
-            healthBar.value = (float) health / maxHealth;
-        }
-
-        public void Reset()
-        {
-            icon.gameObject.SetActive(false);
-            textName.gameObject.SetActive(false);
-            healthBar.gameObject.SetActive(false);
+            for (int i = 0; i < executors.Length; i++)
+            {
+                Button button = _switchDictionary.FirstOrDefault(x => x.Key.IsInstanceOfType(executors[i])).Value;
+                if (button != null)
+                {
+                    button.gameObject.SetActive(true);
+                    var i1 = i;
+                    button.onClick.AddListener(() => OnClick.Invoke(executors[i1]));
+                }
+            }
         }
     }
 }
