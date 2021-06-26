@@ -1,40 +1,31 @@
 using System;
 using Abstractions;
-using Commands;
 using UI.Model;
 using UI.View;
 using UnityEngine;
-using Utils;
-using Object = UnityEngine.Object;
 
 
 namespace UI.Presenter
 {
     public class Presenter: IDisposable
     {
-        private SelectableModel _model;
+        private SelectableModel _selectable;
         private InfoPanelView _info;
         private ControlPanelView _control;
-
-        public Presenter()
+        private readonly ControlModel _model = new ControlModel();
+        
+        
+        public Presenter(InfoPanelView info, ControlPanelView control)
         {
-            _model = Resources.Load<SelectableModel>("Config/SelectableModel");
-            _model.SubscriptionOnSelect(OnChangeItem);
-            _info = Object.FindObjectOfType<InfoPanelView>();
-            _control = Object.FindObjectOfType<ControlPanelView>();
+            _selectable = Resources.Load<SelectableModel>("Config/SelectableModel");
+            _selectable.SubscriptionOnSelect(OnChangeItem);
+            _info = info;
+            _control = control;
             _info.Reset();
-            _control.OnClick += OnClick;
+            _control.OnClick += _model.OnClick;
         }
 
-        private void OnClick(ICommandExecutor executor)
-        {
-            if (executor is CommandExecutorBase<ICreateUnitCommand> unitCreater)
-            {
-                AssetCollection collection = Resources.Load<AssetCollection>("Config/Collection");
-                unitCreater.Execute(collection.InjectAsset(new ProduceUnitCommand()));
-                Resources.UnloadAsset(collection);
-            }
-        }
+        
 
         private void OnChangeItem(ISelectableItem item)
         {
@@ -59,10 +50,10 @@ namespace UI.Presenter
 
         public void Dispose()
         {
-            _control.OnClick -= OnClick;
+            _control.OnClick -= _model.OnClick;
             _control = null;
             _info = null;
-            _model = null;
+            _selectable = null;
         }
     }
 }

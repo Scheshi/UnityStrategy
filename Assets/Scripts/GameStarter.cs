@@ -4,6 +4,7 @@ using Core.Buildings;
 using Input;
 using UI.Presenter;
 using UnityEngine;
+using Zenject;
 
 
 public class GameStarter : MonoBehaviour
@@ -12,7 +13,7 @@ public class GameStarter : MonoBehaviour
     [SerializeField] private TestBuilding secondBuilding;
     private InputView _input;
     private BuildingController _startBuildingController;
-    private Presenter _presenter;
+    [Inject]private Presenter _presenter;
 
     private void Awake()
     {
@@ -21,7 +22,6 @@ public class GameStarter : MonoBehaviour
         _startBuildingController = new BuildingController(startBuilding);
         startBuilding.SetExecutors(new ProduceUnitCommandExecutor());
         //_secondBuildingController = new BuildingController(secondBuilding);
-        _presenter = new Presenter();
     }
 
     private void OnDestroy()
