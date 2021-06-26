@@ -3,7 +3,7 @@ using Abstractions;
 
 namespace Commands.Creators
 {
-    public class CancelCommandCreator: CommandCreator<ICancelCommand>
+    public sealed class CancelCommandCreator: CommandCreator<ICancelCommand>
     {
         protected override void CreateCommand(Action<ICancelCommand> onCallBack)
         {

@@ -6,7 +6,7 @@ using Utils;
 
 namespace Commands.Creators
 {
-    public class ProduceUnitCommandCreator: CommandCreator<ICreateUnitCommand>
+    public sealed class ProduceUnitCommandCreator: CommandCreator<ICreateUnitCommand>
     {
         private AssetCollection _collection;
         public ProduceUnitCommandCreator()
