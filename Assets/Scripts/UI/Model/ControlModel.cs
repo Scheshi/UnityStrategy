@@ -1,6 +1,4 @@
 using Abstractions;
-using Commands;
-using Utils;
 using Zenject;
 
 
@@ -8,14 +6,19 @@ namespace UI.Model
 {
     public class ControlModel
     {
-        [Inject] private AssetCollection _assetCollection;
-        
+        //[Inject]
+        [Inject] private CommandCreator<ICreateUnitCommand> _unitProduceCommandCreator;
+        [Inject] private CommandCreator<IAttackCommand> _attackCommandCreator;
+        [Inject] private CommandCreator<ICancelCommand> _cancelCommandCreator;
+        [Inject] private CommandCreator<IMoveCommand> _moveCommandCreator;
+
         public void OnClick(ICommandExecutor executor)
         {
-            if (executor is CommandExecutorBase<ICreateUnitCommand> unitCreater)
-            {
-                unitCreater.Execute(_assetCollection.InjectAsset(new ProduceUnitCommand()));
-            }
+            _unitProduceCommandCreator.Create(executor, executor.Execute);
+            _attackCommandCreator.Create(executor, executor.Execute);
+            _cancelCommandCreator.Create(executor, executor.Execute);
+            _moveCommandCreator.Create(executor, executor.Execute);
+            
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using Abstractions;
 using UnityEngine;
 
-namespace UI.Model
+namespace Utils
 {
     [CreateAssetMenu(menuName = "Models/SelectableModel")]
     public class SelectableModel: ScriptableObject

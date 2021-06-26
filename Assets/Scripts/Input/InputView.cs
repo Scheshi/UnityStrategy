@@ -1,6 +1,6 @@
 using Abstractions;
-using UI.Model;
 using UnityEngine;
+using Utils;
 using Zenject;
 
 
@@ -9,11 +9,13 @@ namespace Input
     public class InputView : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera;
-        [Inject] private SelectableModel _model;
+        [Inject]
+        private SelectableModel _model;
 
         public void Init()
         {
             mainCamera = Camera.main;
+            //_model = Resources.Load<SelectableModel>("Config/SelectableModel"); 
         }
         
         private void Update()

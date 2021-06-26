@@ -3,6 +3,7 @@ using Abstractions;
 using UI.Model;
 using UI.View;
 using UnityEngine;
+using Utils;
 
 
 namespace UI.Presenter
@@ -51,6 +52,7 @@ namespace UI.Presenter
         public void Dispose()
         {
             _control.OnClick -= _model.OnClick;
+            _selectable.UnsubscriptionOnSelect(OnChangeItem);
             _control = null;
             _info = null;
             _selectable = null;
