@@ -10,6 +10,7 @@ namespace Abstractions
         string Name { get; }
         int CurrentHealth { get; }
         int MaxHealth { get; }
+        Sprite Icon { get; }
         void Select();
         void Unselect();
         void SetExecutors(params ICommandExecutor[] executors);

@@ -23,17 +23,13 @@ namespace Utils
             Container.Bind<ScriptableModel<ISelectableItem>>().FromInstance(model).AsSingle();
             Container.Bind<AssetCollection>().FromInstance(collection).AsSingle();
             Container.Bind<ScriptableModel<Vector3>>().FromInstance(position).AsSingle();
-            Container.Bind<DiContainer>().WithId("Utils").FromInstance(Container).AsSingle();
+            //Container.Bind<DiContainer>().FromInstance(Container).AsSingle();
             Container.Bind<ControlModel>().AsSingle();
             Container.Bind<CommandCreator<ICreateUnitCommand>>().To<ProduceUnitCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<IAttackCommand>>().To<AttackCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<IMoveCommand>>().To<MoveCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<ICancelCommand>>().To<CancelCommandCreator>().AsSingle();
             //Container.Bind<ScriptableModel<ISelectableItem>>().WithId("Target").FromInstance(target).AsSingle();
-            
-            var presenter = new Presenter(infoPanelView, controlPanelView, model);
-            Container.Inject(presenter);
-            Container.Bind<Presenter>().FromInstance(presenter).AsSingle();
         }
     }
 }

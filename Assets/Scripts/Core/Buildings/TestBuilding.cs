@@ -15,6 +15,7 @@ namespace Core.Buildings
         }
         [SerializeField] private string itemName;
         [SerializeField] private int maxHealth;
+        [SerializeField] private Sprite _icon;
         private Material _outlineMaterial;
         private Material[] _defaultMaterials;
         private Meshes[] _meshes;
@@ -25,6 +26,7 @@ namespace Core.Buildings
         public string Name => itemName;
         public int CurrentHealth => _currentHealth;
         public int MaxHealth => maxHealth;
+        public Sprite Icon => _icon;
 
         private void Start()
         {

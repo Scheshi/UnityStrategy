@@ -2,7 +2,6 @@ using System;
 using Abstractions;
 using UI.Model;
 using UI.View;
-using Utils;
 using Zenject;
 
 
@@ -15,21 +14,21 @@ namespace UI.Presenter
         private ControlPanelView _control;
         private  ControlModel _model;
 
-
-        public Presenter(InfoPanelView info, ControlPanelView control, ScriptableModel<ISelectableItem> selectable)
+        public Presenter(ControlPanelView control, InfoPanelView info, ScriptableModel<ISelectableItem> selectable, ControlModel model)
         {
             _selectable = selectable;
             _selectable.OnChangeValue += OnChangeItem;
             _info = info;
             _control = control;
             _info.Reset();
+            _model = model;
+            _control.OnClick += _model.OnClick;
         }
 
         [Inject]
         private void InjectModel(ControlModel model)
         {
-            _model = model;
-            _control.OnClick += _model.OnClick;
+            
         }
 
         
@@ -38,7 +37,7 @@ namespace UI.Presenter
         {
             if (_selectable.CurrentValue != null)
             {
-                _info.SetInfo(null, _selectable.CurrentValue.Name, _selectable.CurrentValue.CurrentHealth, _selectable.CurrentValue.MaxHealth);
+                _info.SetInfo(_selectable.CurrentValue.Icon, _selectable.CurrentValue.Name, _selectable.CurrentValue.CurrentHealth, _selectable.CurrentValue.MaxHealth);
                 SetButtons(_selectable.CurrentValue);
             }
             else
