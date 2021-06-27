@@ -16,6 +16,7 @@ namespace Utils
         [SerializeField] private ScriptableModel<ISelectableItem> model;
         [SerializeField] private AssetCollection collection;
         [SerializeField] private ScriptableModel<Vector3> position;
+        [SerializeField] private ScriptableModel<ISelectableItem> target;
         
         public override void InstallBindings()
         {
@@ -28,6 +29,7 @@ namespace Utils
             Container.Bind<CommandCreator<IAttackCommand>>().To<AttackCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<IMoveCommand>>().To<MoveCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<ICancelCommand>>().To<CancelCommandCreator>().AsSingle();
+            Container.Bind<ScriptableModel<ISelectableItem>>().WithId("Target").FromInstance(target).AsSingle();
             
             var presenter = new Presenter(infoPanelView, controlPanelView, model);
             Container.Inject(presenter);

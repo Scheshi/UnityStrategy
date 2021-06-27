@@ -10,6 +10,7 @@ namespace Input
         [SerializeField] private Camera mainCamera;
         [Inject]private ScriptableModel<ISelectableItem> _selectable;
         [Inject]private ScriptableModel<Vector3> _position;
+        //[Inject(Id = "Target")] private ScriptableModel<ISelectableItem> _target;
 
         public void Init()
         {
@@ -34,7 +35,10 @@ namespace Input
             {
                 if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
                 {
-                    
+                    if (hit.collider.gameObject.TryGetComponent(out ISelectableItem target))
+                    {
+                        //_target.SetValue(target);
+                    }
                     _position.SetValue(hit.point);
                 }
             }
