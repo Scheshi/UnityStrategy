@@ -17,16 +17,15 @@ public class GameStarter : MonoBehaviour
 
     private void Awake()
     {
-        _input = new GameObject("Input").AddComponent<InputView>();
-        _container.Inject(_input);
-        _input.Init();
+       _input = new GameObject("Input").AddComponent<InputView>();
         _startBuildingController = new BuildingController(startBuilding);
         startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding.transform.position + Vector3.forward * 10));
         //_secondBuildingController = new BuildingController(secondBuilding);
     }
 
-    private void OnDestroy()
+    private void Start()
     {
-        _presenter.Dispose();
+        _container.Inject(_input);
+        _input.Init();
     }
 }
