@@ -29,7 +29,7 @@ namespace Utils
             Container.Bind<CommandCreator<IAttackCommand>>().To<AttackCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<IMoveCommand>>().To<MoveCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<ICancelCommand>>().To<CancelCommandCreator>().AsSingle();
-            Container.Bind<ScriptableModel<ISelectableItem>>().WithId("Target").FromInstance(target).AsSingle();
+            //Container.Bind<ScriptableModel<ISelectableItem>>().WithId("Target").FromInstance(target).AsSingle();
             
             var presenter = new Presenter(infoPanelView, controlPanelView, model);
             Container.Inject(presenter);
