@@ -1,6 +1,5 @@
 using Abstractions;
 using UnityEngine;
-using Utils;
 using Zenject;
 
 
@@ -9,8 +8,8 @@ namespace Input
     public class InputView : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera;
-        [Inject]private SelectableModel _selectable;
-        [Inject]private PositionModel _position;
+        [Inject]private ScriptableModel<ISelectableItem> _selectable;
+        [Inject]private ScriptableModel<Vector3> _position;
 
         public void Init()
         {
@@ -26,7 +25,7 @@ namespace Input
                     if (!hit.collider.gameObject.CompareTag("NotRaycast"))
                     {
                         ISelectableItem selectable = hit.collider.gameObject.GetComponent<ISelectableItem>();
-                        _selectable.SelectItem(selectable); 
+                        _selectable.SetValue(selectable); 
                     }
                 }
             }
@@ -35,7 +34,8 @@ namespace Input
             {
                 if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
                 {
-                    _position.SetClickPosition(hit.point);
+                    
+                    _position.SetValue(hit.point);
                 }
             }
         }

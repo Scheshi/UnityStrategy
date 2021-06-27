@@ -1,18 +1,12 @@
-using System;
+using Abstractions;
 using UnityEngine;
+
 
 namespace Utils
 {
     [CreateAssetMenu(menuName = "Models" + nameof(PositionModel))]
-    public class PositionModel : ScriptableObject
+    public class PositionModel : ScriptableModel<Vector3>
     {
-        public Vector3 ClickPosition { get; private set; }
-        public event Action OnSetPosition = () => { };
-
-        public void SetClickPosition(Vector3 position)
-        {
-            ClickPosition = position;
-            OnSetPosition.Invoke();
-        }
+        
     }
 }

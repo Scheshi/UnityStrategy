@@ -10,16 +10,16 @@ namespace UI.Presenter
 {
     public class Presenter: IDisposable
     {
-        private SelectableModel _selectable;
+        private ScriptableModel<ISelectableItem> _selectable;
         private InfoPanelView _info;
         private ControlPanelView _control;
         private  ControlModel _model;
 
 
-        public Presenter(InfoPanelView info, ControlPanelView control, SelectableModel selectable)
+        public Presenter(InfoPanelView info, ControlPanelView control, ScriptableModel<ISelectableItem> selectable)
         {
             _selectable = selectable;
-            _selectable.SubscriptionOnSelect(OnChangeItem);
+            _selectable.OnChangeValue += OnChangeItem;
             _info = info;
             _control = control;
             _info.Reset();
@@ -34,12 +34,12 @@ namespace UI.Presenter
 
         
 
-        private void OnChangeItem(ISelectableItem item)
+        private void OnChangeItem()
         {
-            if (item != null)
+            if (_selectable.CurrentValue != null)
             {
-                _info.SetInfo(null, item.Name, item.CurrentHealth, item.MaxHealth);
-                SetButtons(item);
+                _info.SetInfo(null, _selectable.CurrentValue.Name, _selectable.CurrentValue.CurrentHealth, _selectable.CurrentValue.MaxHealth);
+                SetButtons(_selectable.CurrentValue);
             }
             else
             {
@@ -58,7 +58,7 @@ namespace UI.Presenter
         public void Dispose()
         {
             _control.OnClick -= _model.OnClick;
-            _selectable.UnsubscriptionOnSelect(OnChangeItem);
+            _selectable.OnChangeValue -= OnChangeItem;
             _control = null;
             _info = null;
             _selectable = null;

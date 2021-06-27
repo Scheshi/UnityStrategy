@@ -13,15 +13,15 @@ namespace Utils
     {
         [SerializeField] private ControlPanelView controlPanelView;
         [SerializeField] private InfoPanelView infoPanelView;
-        [SerializeField] private SelectableModel model;
+        [SerializeField] private ScriptableModel<ISelectableItem> model;
         [SerializeField] private AssetCollection collection;
-        [SerializeField] private PositionModel position;
+        [SerializeField] private ScriptableModel<Vector3> position;
         
         public override void InstallBindings()
         {
-            Container.Bind<SelectableModel>().FromInstance(model).AsSingle();
+            Container.Bind<ScriptableModel<ISelectableItem>>().FromInstance(model).AsSingle();
             Container.Bind<AssetCollection>().FromInstance(collection).AsSingle();
-            Container.Bind<PositionModel>().FromInstance(position).AsSingle();
+            Container.Bind<ScriptableModel<Vector3>>().FromInstance(position).AsSingle();
             Container.Bind<DiContainer>().WithId("Utils").FromInstance(Container).AsSingle();
             Container.Bind<ControlModel>().AsSingle();
             Container.Bind<CommandCreator<ICreateUnitCommand>>().To<ProduceUnitCommandCreator>().AsSingle();

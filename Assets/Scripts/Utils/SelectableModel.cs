@@ -1,35 +1,20 @@
-using System;
 using Abstractions;
 using UnityEngine;
+
 
 namespace Utils
 {
     [CreateAssetMenu(menuName = "Models/SelectableModel")]
-    public class SelectableModel: ScriptableObject
+    public class SelectableModel: ScriptableModel<ISelectableItem>
     {
-        private Action<ISelectableItem> _onSetItem;
-        private ISelectableItem _value;
-        public ISelectableItem Value => _value;
-
-        public void SelectItem(ISelectableItem value)
+        public override void SetValue(ISelectableItem value)
         {
             if (value != null)
             {
-                _value?.Unselect();
-                _value = value;
-                _value.Select();
-                _onSetItem.Invoke(value);
+                CurrentValue?.Unselect();
+                base.SetValue(value);
+                CurrentValue.Select();
             }
-        }
-
-        public void SubscriptionOnSelect(Action<ISelectableItem> onSetItem)
-        {
-            _onSetItem += onSetItem;
-        }
-
-        public void UnsubscriptionOnSelect(Action<ISelectableItem> onSetItem)
-        {
-            _onSetItem -= onSetItem;
         }
     }
 }
