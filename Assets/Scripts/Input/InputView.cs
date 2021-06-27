@@ -9,15 +9,12 @@ namespace Input
     public class InputView : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera;
-        //[Inject]
-        private SelectableModel _selectable;
-        private PositionModel _position;
+        [Inject]private SelectableModel _selectable;
+        [Inject]private PositionModel _position;
 
         public void Init()
         {
             mainCamera = Camera.main;
-            _selectable = Resources.Load<SelectableModel>("Config/SelectableModel");
-            _position = Resources.Load<PositionModel>("Config/PositionModel");
         }
         
         private void Update()

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Utils
 {
+    [CreateAssetMenu(menuName = "Models" + nameof(PositionModel))]
     public class PositionModel : ScriptableObject
     {
         public Vector3 ClickPosition { get; private set; }

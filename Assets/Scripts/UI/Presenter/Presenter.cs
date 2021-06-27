@@ -2,8 +2,8 @@ using System;
 using Abstractions;
 using UI.Model;
 using UI.View;
-using UnityEngine;
 using Utils;
+using Zenject;
 
 
 namespace UI.Presenter
@@ -13,16 +13,22 @@ namespace UI.Presenter
         private SelectableModel _selectable;
         private InfoPanelView _info;
         private ControlPanelView _control;
-        private readonly ControlModel _model = new ControlModel();
-        
-        
-        public Presenter(InfoPanelView info, ControlPanelView control)
+        private  ControlModel _model;
+
+
+        public Presenter(InfoPanelView info, ControlPanelView control, SelectableModel selectable)
         {
-            _selectable = Resources.Load<SelectableModel>("Config/SelectableModel");
+            _selectable = selectable;
             _selectable.SubscriptionOnSelect(OnChangeItem);
             _info = info;
             _control = control;
             _info.Reset();
+        }
+
+        [Inject]
+        private void InjectModel(ControlModel model)
+        {
+            _model = model;
             _control.OnClick += _model.OnClick;
         }
 
