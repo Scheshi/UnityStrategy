@@ -24,6 +24,7 @@ namespace Abstractions
 
     public interface IMoveCommand : ICommand
     {
+        event Action OnEndPath;
         void Move(Transform transform);
     }
 
