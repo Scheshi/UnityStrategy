@@ -1,13 +1,14 @@
 using System;
 using Abstractions;
 using Utils;
+using Zenject;
 
 namespace Commands.Creators
 {
     public sealed class MoveCommandCreator: CommandCreator<IMoveCommand>
     {
         private Action<IMoveCommand> _onCallBack;
-        private PositionModel _position;
+        [Inject]private PositionModel _position;
         
         protected override void CreateCommand(Action<IMoveCommand> onCallBack)
         {

@@ -21,7 +21,7 @@ public class GameStarter : MonoBehaviour
         _container.Inject(_input);
         _input.Init();
         _startBuildingController = new BuildingController(startBuilding);
-        startBuilding.SetExecutors(new ProduceUnitCommandExecutor());
+        startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding.transform.position + Vector3.forward * 10));
         //_secondBuildingController = new BuildingController(secondBuilding);
     }
 

@@ -6,9 +6,17 @@ namespace Commands
 {
     public class ProduceUnitCommandExecutor : CommandExecutorBase<ICreateUnitCommand>
     {
+        public Vector3 SpawnPosition { get;}
+
+        public ProduceUnitCommandExecutor(Vector3 spawnPosition)
+        {
+            SpawnPosition = spawnPosition;
+        }
+        
         protected override void ExecuteTypeCommand(ICreateUnitCommand command)
         {
-            Object.Instantiate(command.InstantiateUnit());
+            command.SpawnPosition = SpawnPosition;
+            command.InstantiateUnit();
         }
     }
 }

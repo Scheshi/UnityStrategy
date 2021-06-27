@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Abstractions
 {
@@ -11,6 +12,7 @@ namespace Abstractions
         int MaxHealth { get; }
         void Select();
         void Unselect();
+        void SetExecutors(params ICommandExecutor[] executors);
     }
 
     public interface IBuilding : ISelectableItem

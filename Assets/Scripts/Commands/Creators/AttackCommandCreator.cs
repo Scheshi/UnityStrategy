@@ -7,7 +7,7 @@ namespace Commands.Creators
     {
         protected override void CreateCommand(Action<IAttackCommand> onCallBack)
         {
-            //
+            onCallBack.Invoke(new AttackCommand());
         }
     }
 }
