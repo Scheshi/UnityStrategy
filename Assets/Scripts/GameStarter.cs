@@ -1,3 +1,4 @@
+using System;
 using Abstractions;
 using Commands;
 using Core.Buildings;
@@ -34,11 +35,16 @@ public class GameStarter : MonoBehaviour
     private void Awake()
     {
         //_container.Inject(_input);
+        
+        
+        //_secondBuildingController = new BuildingController(secondBuilding);
+    }
+
+    private void Start()
+    {
         _input.Init();
         _startBuildingController = new BuildingController(startBuilding);
         startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding.transform.position + Vector3.forward * 10));
-        
-        //_secondBuildingController = new BuildingController(secondBuilding);
     }
 
     private void Update()

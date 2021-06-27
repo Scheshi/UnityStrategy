@@ -1,8 +1,6 @@
 using Abstractions;
 using Commands.Creators;
 using UI.Model;
-using UI.Presenter;
-using UI.View;
 using UnityEngine;
 using Zenject;
 
@@ -11,8 +9,6 @@ namespace Utils
 {
     public class UtilsInstaller: MonoInstaller
     {
-        [SerializeField] private ControlPanelView controlPanelView;
-        [SerializeField] private InfoPanelView infoPanelView;
         [SerializeField] private ScriptableModel<ISelectableItem> model;
         [SerializeField] private AssetCollection collection;
         [SerializeField] private ScriptableModel<Vector3> position;
