@@ -15,7 +15,7 @@ namespace Commands
         {
             Debug.Log("Create unit");
             var unit = Object.Instantiate(_unitPrefab, SpawnPosition, Quaternion.identity);
-            unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit), new AttackCommandExecutor(unit.transform));
+            unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit), new AttackCommandExecutor(unit.transform), new PatrolCommandExecutor(unit.transform));
         }
     }
 }

@@ -28,6 +28,13 @@ namespace Abstractions
         void Move(Transform transform);
     }
 
+    public interface IPatrolCommand : ICommand
+    {
+        void SetStartPosition(Vector3 startPosition);
+        
+        void Patrol(Transform movingTransform);
+    }
+
 
 
     public interface ICommandExecutor

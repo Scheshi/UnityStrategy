@@ -15,7 +15,6 @@ namespace Commands
         
         public void Attack(Vector3 ownerPosition)
         {
-            Debug.Log(nameof(Attack));
             if ((ownerPosition - _target.Transform.position).sqrMagnitude > 64)
             {
                 Debug.Log("Юнит слишком далеко для атаки");

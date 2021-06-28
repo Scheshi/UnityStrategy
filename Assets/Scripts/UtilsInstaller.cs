@@ -25,6 +25,7 @@ namespace Utils
             Container.Bind<CommandCreator<IAttackCommand>>().To<AttackCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<IMoveCommand>>().To<MoveCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<ICancelCommand>>().To<CancelCommandCreator>().AsSingle();
+            Container.Bind<CommandCreator<IPatrolCommand>>().To<PatrolCommandCreator>().AsSingle();
             Container.Bind<ScriptableModel<IAttackable>>().FromInstance(target).AsSingle();
         }
     }
