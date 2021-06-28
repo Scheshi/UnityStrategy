@@ -17,7 +17,9 @@ namespace Commands.Creators
 
         private void ModelOnOnChangeValue()
         {
-            _action.Invoke(new AttackCommand(_model.CurrentValue));
+            _action?.Invoke(new AttackCommand(_model.CurrentValue));
+            _model.OnChangeValue -= ModelOnOnChangeValue;
+            _action = null;
         }
     }
 }

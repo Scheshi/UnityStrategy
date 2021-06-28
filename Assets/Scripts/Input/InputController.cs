@@ -9,14 +9,15 @@ namespace Input
     public class InputController: IDisposable
     {
         private Camera _mainCamera;
-        [Inject]private ScriptableModel<ISelectableItem> _selectable;
-        [Inject]private ScriptableModel<Vector3> _position;
-        //[Inject(Id = "Target")] private ScriptableModel<ISelectableItem> _target;
+        private ScriptableModel<ISelectableItem> _selectable;
+        private ScriptableModel<Vector3> _position;
+        private ScriptableModel<IAttackable> _target;
 
-        public InputController(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position)
+        public InputController(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> target)
         {
             _selectable = selectable;
             _position = position;
+            _target = target;
         }
         public void Init()
         {
@@ -41,9 +42,9 @@ namespace Input
             {
                 if (Physics.Raycast(_mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
                 {
-                    if (hit.collider.gameObject.TryGetComponent(out ISelectableItem target))
+                    if (hit.collider.gameObject.TryGetComponent(out IAttackable target))
                     {
-                        //_target.SetValue(target);
+                        _target.SetValue(target);
                     }
                     _position.SetValue(hit.point);
                 }
