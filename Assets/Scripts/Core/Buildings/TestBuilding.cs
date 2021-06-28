@@ -15,18 +15,24 @@ namespace Core.Buildings
         }
         [SerializeField] private string itemName;
         [SerializeField] private int maxHealth;
-        [SerializeField] private Sprite _icon;
+        [SerializeField] private Sprite icon;
         private Material _outlineMaterial;
         private Material[] _defaultMaterials;
         private Meshes[] _meshes;
         private int _currentHealth;
 
         public ICommandExecutor[] Executors { get; private set; }
+        public Transform Transform => transform;
         public event Action OnSelect = () => { };
         public string Name => itemName;
         public int CurrentHealth => _currentHealth;
         public int MaxHealth => maxHealth;
-        public Sprite Icon => _icon;
+        public void Damage(int point)
+        {
+            _currentHealth -= point;
+        }
+
+        public Sprite Icon => icon;
 
         private void Start()
         {

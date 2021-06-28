@@ -3,13 +3,29 @@ using UnityEngine;
 
 namespace Abstractions
 {
-    public interface ISelectableItem
+    public interface IHealthOwner
     {
-        ICommandExecutor[] Executors { get; }
-        event Action OnSelect;
-        string Name { get; }
         int CurrentHealth { get; }
         int MaxHealth { get; }
+    }
+
+    public interface ITransformOwner
+    {
+        Transform Transform { get; }
+    }
+
+    public interface IAttackable : IHealthOwner, ITransformOwner
+    {
+        void Damage(int point);
+    }
+    
+    public interface ISelectableItem: IAttackable
+    {
+        ICommandExecutor[] Executors { get; }
+        Transform Transform { get; }
+        event Action OnSelect;
+        string Name { get; }
+        
         Sprite Icon { get; }
         void Select();
         void Unselect();

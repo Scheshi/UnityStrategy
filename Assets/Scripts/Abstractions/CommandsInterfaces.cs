@@ -18,7 +18,7 @@ namespace Abstractions
 
     public interface IAttackCommand : ICommand
     {
-        void Attack();
+        void Attack(Vector3 ownerPosition);
     }
     public interface ICancelCommand: ICommand{}
 

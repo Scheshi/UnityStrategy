@@ -12,7 +12,7 @@ namespace Utils
         [SerializeField] private ScriptableModel<ISelectableItem> model;
         [SerializeField] private AssetCollection collection;
         [SerializeField] private ScriptableModel<Vector3> position;
-        [SerializeField] private ScriptableModel<ISelectableItem> target;
+        [SerializeField] private ScriptableModel<IAttackable> target;
         
         public override void InstallBindings()
         {
@@ -25,7 +25,7 @@ namespace Utils
             Container.Bind<CommandCreator<IAttackCommand>>().To<AttackCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<IMoveCommand>>().To<MoveCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<ICancelCommand>>().To<CancelCommandCreator>().AsSingle();
-            //Container.Bind<ScriptableModel<ISelectableItem>>().WithId("Target").FromInstance(target).AsSingle();
+            Container.Bind<ScriptableModel<IAttackable>>().FromInstance(target).AsSingle();
         }
     }
 }
