@@ -2,7 +2,6 @@ using System;
 using Abstractions;
 using UI.Model;
 using UI.View;
-using Zenject;
 
 
 namespace UI.Presenter
@@ -25,13 +24,7 @@ namespace UI.Presenter
             _control.OnClick += _model.OnClick;
         }
 
-        [Inject]
-        private void InjectModel(ControlModel model)
-        {
-            
-        }
 
-        
 
         private void OnChangeItem()
         {

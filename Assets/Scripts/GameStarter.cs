@@ -31,14 +31,6 @@ public class GameStarter : MonoBehaviour
     {
         _presenter = new Presenter(control, info, item, model);
     }
-    
-    private void Awake()
-    {
-        //_container.Inject(_input);
-        
-        
-        //_secondBuildingController = new BuildingController(secondBuilding);
-    }
 
     private void Start()
     {
@@ -50,5 +42,11 @@ public class GameStarter : MonoBehaviour
     private void Update()
     {
         _input.Update();
+    }
+
+    private void OnDestroy()
+    {
+        _presenter.Dispose();
+        _input.Dispose();
     }
 }

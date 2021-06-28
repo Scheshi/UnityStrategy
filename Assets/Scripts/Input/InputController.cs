@@ -1,3 +1,4 @@
+using System;
 using Abstractions;
 using UnityEngine;
 using Zenject;
@@ -5,9 +6,9 @@ using Zenject;
 
 namespace Input
 {
-    public class InputController
+    public class InputController: IDisposable
     {
-        private Camera mainCamera;
+        private Camera _mainCamera;
         [Inject]private ScriptableModel<ISelectableItem> _selectable;
         [Inject]private ScriptableModel<Vector3> _position;
         //[Inject(Id = "Target")] private ScriptableModel<ISelectableItem> _target;
@@ -19,14 +20,14 @@ namespace Input
         }
         public void Init()
         {
-            mainCamera = Camera.main;
+            _mainCamera = Camera.main;
         }
         
         public void Update()
         {
             if (UnityEngine.Input.GetButtonDown("Fire1"))
             {
-                if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
+                if (Physics.Raycast(_mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
                 {
                     if (!hit.collider.gameObject.CompareTag("NotRaycast"))
                     {
@@ -38,7 +39,7 @@ namespace Input
 
             if (UnityEngine.Input.GetButtonDown("Fire2"))
             {
-                if (Physics.Raycast(mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
+                if (Physics.Raycast(_mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
                 {
                     if (hit.collider.gameObject.TryGetComponent(out ISelectableItem target))
                     {
@@ -47,6 +48,13 @@ namespace Input
                     _position.SetValue(hit.point);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _selectable = null;
+            _position = null;
+            _mainCamera = null;
         }
     }
 }
