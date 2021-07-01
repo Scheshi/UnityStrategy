@@ -21,6 +21,7 @@ namespace Abstractions
     {
         private CancellationTokenSource _tokenSource;
         private IAwaitable<TParam> _awaitable;
+        protected event Action onCancelled = () => { };
 
         public void SetAwaitable(IAwaitable<TParam> awaitable)
         {
@@ -39,6 +40,12 @@ namespace Abstractions
             {
                 Debug.Log("Command " + nameof(T) + " is cancelled");
             }
+        }
+
+        public void Cancel()
+        {
+            _tokenSource?.Cancel();
+            onCancelled.Invoke();
         }
 
         protected abstract T GetCommand(TParam result);

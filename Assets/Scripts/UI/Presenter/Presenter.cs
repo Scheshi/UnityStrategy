@@ -22,6 +22,7 @@ namespace UI.Presenter
             _info.Reset();
             _model = model;
             _control.OnClick += _model.OnClick;
+            _control.OnCancel += _model.OnCancelCommands;
         }
 
 

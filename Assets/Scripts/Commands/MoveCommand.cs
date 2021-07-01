@@ -10,26 +10,15 @@ namespace Commands
     public class MoveCommand : IMoveCommand
     {
         private Vector3 _to;
-        private Vector3 _from;
-        public event Action OnEndPath = () => { };
 
         public MoveCommand(Vector3 to)
         {
             _to = to;
         }
 
-        public void SetFrom(Vector3 from)
-        {
-            _from = from;
-        }
-
         public async void Move(NavMeshAgent agent)
         {
-            while (true)
-            {
-                await MoveTo(agent, _to);
-                await MoveTo(agent, _from);
-            }
+            await MoveTo(agent, _to);
         }
 
         private async Task MoveTo(NavMeshAgent agent, Vector3 to)

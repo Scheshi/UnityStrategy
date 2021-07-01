@@ -13,14 +13,9 @@ namespace Commands
             _gameObjectMoving = gameObjectMoving;
         }
         
-        protected override async void ExecuteTypeCommand(IMoveCommand command)
+        protected override void ExecuteTypeCommand(IMoveCommand command)
         {
-            command.SetFrom(_gameObjectMoving.transform.position);
-            while (true)
-            {
-                command.Move(_gameObjectMoving);
-            }
-            
+            command.Move(_gameObjectMoving);
         }
     }
 }

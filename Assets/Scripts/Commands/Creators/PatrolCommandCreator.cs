@@ -13,6 +13,11 @@ namespace Commands.Creators
             SetAwaitable(position);
         }
 
-        protected override IPatrolCommand GetCommand(Vector3 result) => new PatrolCommand(result);
+        protected override IPatrolCommand GetCommand(Vector3 result)
+        {
+            var command = new PatrolCommand(result);
+            onCancelled += command.StopPatrol;
+            return command;
+        } 
     }
 }

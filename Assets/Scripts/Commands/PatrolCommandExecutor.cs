@@ -1,32 +1,23 @@
-using System.Collections;
 using Abstractions;
-using UnityEngine;
+using UnityEngine.AI;
+
 
 namespace Commands
 {
     public class PatrolCommandExecutor: CommandExecutorBase<IPatrolCommand>
     {
-        private Transform _ownerTransform;
+        private NavMeshAgent _ownerTransform;
         
         
-        public PatrolCommandExecutor(Transform ownerTransform)
+        public PatrolCommandExecutor(NavMeshAgent ownerTransform)
         {
             _ownerTransform = ownerTransform;
         }
         
         protected override void ExecuteTypeCommand(IPatrolCommand command)
         {
-            command.SetStartPosition(_ownerTransform.position);
-            _ownerTransform.gameObject.GetComponent<MonoBehaviour>().StartCoroutine(PatrolCoroutine(command));
-        }
-        
-        private IEnumerator PatrolCoroutine(IPatrolCommand command)
-        {
-            while (true)
-            {
-                command.Patrol(_ownerTransform);
-                yield return null;
-            }
+            command.SetStartPosition(_ownerTransform.transform.position);
+            command.Patrol(_ownerTransform);
         }
     }
 }

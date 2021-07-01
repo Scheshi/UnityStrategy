@@ -22,10 +22,10 @@ namespace Utils
             //Container.Bind<DiContainer>().FromInstance(Container).AsSingle();
             Container.Bind<ControlModel>().AsSingle();
             Container.Bind<CommandCreator<ICreateUnitCommand>>().To<ProduceUnitCommandCreator>().AsSingle();
-            Container.Bind<CommandCreator<IAttackCommand>>().To<AttackCommandCreator>().AsSingle();
-            Container.Bind<CommandCreator<IMoveCommand>>().To<MoveCommandCreator>().AsSingle();
+            Container.Bind<CommandCreatorWithCancelled<IAttackCommand, IAttackable>>().To<AttackCommandCreator>().AsSingle();
+            Container.Bind<CommandCreatorWithCancelled<IMoveCommand, Vector3>>().To<MoveCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<ICancelCommand>>().To<CancelCommandCreator>().AsSingle();
-            Container.Bind<CommandCreator<IPatrolCommand>>().To<PatrolCommandCreator>().AsSingle();
+            Container.Bind<CommandCreatorWithCancelled<IPatrolCommand, Vector3>>().To<PatrolCommandCreator>().AsSingle();
             Container.Bind<ScriptableModel<IAttackable>>().FromInstance(target).AsSingle();
         }
     }
