@@ -8,18 +8,11 @@ namespace Commands.Creators
     {
         [Inject] private ScriptableModel<IAttackable> _model;
         private Action<IAttackCommand> _action;
-        
-        protected override void CreateCommand(Action<IAttackCommand> onCallBack)
-        {
-            _action = onCallBack;
-            _model.OnChangeValue += ModelOnOnChangeValue;
-        }
 
-        private void ModelOnOnChangeValue()
+        protected override async void CreateCommand(Action<IAttackCommand> onCallBack)
         {
-            _action?.Invoke(new AttackCommand(_model.CurrentValue));
-            _model.OnChangeValue -= ModelOnOnChangeValue;
-            _action = null;
+            var target = await _model;
+            _action?.Invoke(new AttackCommand(target));
         }
     }
 }
