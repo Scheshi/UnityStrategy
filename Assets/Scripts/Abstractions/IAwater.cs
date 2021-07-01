@@ -2,14 +2,14 @@ using System.Runtime.CompilerServices;
 
 namespace Abstractions
 {
-    public interface IAwaiter<T>: INotifyCompletion
+    public interface IAwaiter<TParam>: INotifyCompletion
     {
         bool IsComplete { get; }
-        T GetResult();
+        TParam GetResult();
     }
 
-    public interface IAwaitable<T>
+    public interface IAwaitable<TResult>
     {
-        IAwaiter<T> GetAwaiter();
+        IAwaiter<TResult> GetAwaiter();
     }
 }

@@ -5,13 +5,14 @@ namespace Abstractions
 {
     public abstract class ScriptableModel<T>: ScriptableObject, IAwaitable<T>
     {
-        public class AsyncNotification: IAwaiter<T>
+        public class AsyncNotification<TAwait>: IAwaiter<TAwait>, IDisposable
         {
-            private ScriptableModel<T> _model;
+            private ScriptableModel<TAwait> _model;
             private bool _isComplete;
             private Action _onCompletedAction;
+            private TAwait _result;
             
-            public AsyncNotification(ScriptableModel<T> model)
+            public AsyncNotification(ScriptableModel<TAwait> model)
             {
                 _model = model;
                 model.OnChangeValue += OnNotification;
@@ -19,8 +20,10 @@ namespace Abstractions
 
             private void OnNotification()
             {
-                _onCompletedAction?.Invoke();
+                _model.OnChangeValue -= OnNotification;
+                _result = _model.CurrentValue;
                 _isComplete = true;
+                _onCompletedAction?.Invoke();
             }
             
             public void OnCompleted(Action continuation)
@@ -36,9 +39,12 @@ namespace Abstractions
             }
 
             public bool IsComplete => _isComplete;
-            public T GetResult()
+            public TAwait GetResult() => _result;
+
+            public void Dispose()
             {
-                return _model.CurrentValue;
+                _onCompletedAction = null;
+                _model = null;
             }
         }
         public event Action OnChangeValue = () => { };
@@ -52,7 +58,7 @@ namespace Abstractions
 
         public IAwaiter<T> GetAwaiter()
         {
-            return new AsyncNotification(this);
+            return new AsyncNotification<T>(this);
         }
     }
 }
