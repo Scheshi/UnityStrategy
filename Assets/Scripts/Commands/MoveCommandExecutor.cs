@@ -1,7 +1,6 @@
-using System.Collections;
 using Abstractions;
-using UnityEngine;
 using UnityEngine.AI;
+
 
 namespace Commands
 {
@@ -14,9 +13,14 @@ namespace Commands
             _gameObjectMoving = gameObjectMoving;
         }
         
-        protected override void ExecuteTypeCommand(IMoveCommand command)
+        protected override async void ExecuteTypeCommand(IMoveCommand command)
         {
-            command.Move(_gameObjectMoving);
+            command.SetFrom(_gameObjectMoving.transform.position);
+            while (true)
+            {
+                command.Move(_gameObjectMoving);
+            }
+            
         }
     }
 }

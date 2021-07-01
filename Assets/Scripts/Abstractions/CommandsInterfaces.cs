@@ -25,6 +25,7 @@ namespace Abstractions
 
     public interface IMoveCommand : ICommand
     {
+        void SetFrom(Vector3 from);
         void Move(NavMeshAgent agent);
     }
 
