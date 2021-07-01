@@ -1,4 +1,3 @@
-using System;
 using Abstractions;
 using UnityEngine;
 using Zenject;
@@ -6,15 +5,14 @@ using Zenject;
 
 namespace Commands.Creators
 {
-    public sealed class MoveCommandCreator: CommandCreator<IMoveCommand>
+    public sealed class MoveCommandCreator: CommandCreatorWithCancelled<IMoveCommand, Vector3>
     {
-        private Action<IMoveCommand> _onCallBack;
-        [Inject]private ScriptableModel<Vector3> _position;
-        
-        protected override async void CreateCommand(Action<IMoveCommand> onCallBack)
+        [Inject]
+        private MoveCommandCreator(ScriptableModel<Vector3> position)
         {
-            var asyncChangePosition = await _position;
-            onCallBack.Invoke(new MoveCommand(asyncChangePosition));
+            SetAwaitable(position);
         }
+        
+        protected override IMoveCommand GetCommand(Vector3 result) => new MoveCommand(result);
     }
 }
