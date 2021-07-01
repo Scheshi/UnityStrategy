@@ -1,6 +1,7 @@
 using System;
 using Abstractions;
 using UnityEngine;
+using UnityEngine.AI;
 
 
 namespace Commands
@@ -14,15 +15,9 @@ namespace Commands
             _to = to;
         }
         
-        public void Move(Transform transform)
+        public void Move(NavMeshAgent agent)
         {
-            if (Mathf.Abs(transform.position.x - _to.x) < 0.1f && Mathf.Abs(transform.position.y - _to.y) < 0.1f  &&
-                Mathf.Abs(transform.position.z - _to.z) < 0.1f)
-            {
-                OnEndPath.Invoke();
-                return;
-            }
-            transform.Translate((_to - transform.position).normalized * 3.0f * Time.deltaTime);
+            agent.SetDestination(_to);
         }
     }
 }

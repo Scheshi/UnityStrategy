@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Abstractions
 {
@@ -24,8 +25,7 @@ namespace Abstractions
 
     public interface IMoveCommand : ICommand
     {
-        event Action OnEndPath;
-        void Move(Transform transform);
+        void Move(NavMeshAgent agent);
     }
 
     public interface IPatrolCommand : ICommand

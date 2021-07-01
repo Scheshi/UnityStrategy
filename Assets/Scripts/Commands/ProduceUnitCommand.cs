@@ -1,5 +1,6 @@
 using Abstractions;
 using UnityEngine;
+using UnityEngine.AI;
 using Utils;
 
 namespace Commands
@@ -15,7 +16,7 @@ namespace Commands
         {
             Debug.Log("Create unit");
             var unit = Object.Instantiate(_unitPrefab, SpawnPosition, Quaternion.identity);
-            unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit), new AttackCommandExecutor(unit.transform), new PatrolCommandExecutor(unit.transform));
+            unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit.GetComponent<NavMeshAgent>()), new AttackCommandExecutor(unit.transform), new PatrolCommandExecutor(unit.transform));
         }
     }
 }

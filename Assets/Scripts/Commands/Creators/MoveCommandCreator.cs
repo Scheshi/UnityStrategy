@@ -14,6 +14,7 @@ namespace Commands.Creators
         protected override async void CreateCommand(Action<IMoveCommand> onCallBack)
         {
             var asyncChangePosition = await _position;
+            onCallBack.Invoke(new MoveCommand(asyncChangePosition));
             _onCallBack = onCallBack;
             _position.OnChangeValue += OnChangePosition;
         }
