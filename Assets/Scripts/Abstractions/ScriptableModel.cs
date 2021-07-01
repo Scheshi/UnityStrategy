@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Abstractions
 {
-    public abstract class ScriptableModel<T>: ScriptableObject
+    public abstract class ScriptableModel<T>: ScriptableObject, IAwaitable<T>
     {
         public class AsyncNotification: IAwaiter<T>
         {
@@ -48,6 +48,11 @@ namespace Abstractions
         {
             CurrentValue = value;
             OnChangeValue.Invoke();
+        }
+
+        public IAwaiter<T> GetAwaiter()
+        {
+            return new AsyncNotification(this);
         }
     }
 }

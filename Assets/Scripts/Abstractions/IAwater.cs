@@ -7,4 +7,9 @@ namespace Abstractions
         bool IsComplete { get; }
         T GetResult();
     }
+
+    public interface IAwaitable<T>
+    {
+        IAwaiter<T> GetAwaiter();
+    }
 }
