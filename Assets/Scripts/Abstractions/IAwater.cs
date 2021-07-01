@@ -4,7 +4,7 @@ namespace Abstractions
 {
     public interface IAwaiter<TParam>: INotifyCompletion
     {
-        bool IsComplete { get; }
+        bool IsCompleted { get; }
         TParam GetResult();
     }
 

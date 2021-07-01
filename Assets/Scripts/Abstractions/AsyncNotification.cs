@@ -36,7 +36,7 @@ namespace Utils
             }
         }
 
-        public bool IsComplete => _isComplete;
+        public bool IsCompleted => _isComplete;
         public TAwait GetResult() => _result;
 
         public void Dispose()

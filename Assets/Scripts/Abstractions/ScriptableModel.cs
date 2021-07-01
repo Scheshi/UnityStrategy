@@ -6,7 +6,6 @@ namespace Abstractions
 {
     public abstract class ScriptableModel<T>: ScriptableObject, IAwaitable<T>
     {
-        
         public event Action OnChangeValue = () => { };
         public virtual T CurrentValue { get; private set; }
 
