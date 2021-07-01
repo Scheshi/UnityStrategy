@@ -15,14 +15,6 @@ namespace Commands.Creators
         {
             var asyncChangePosition = await _position;
             onCallBack.Invoke(new MoveCommand(asyncChangePosition));
-            _onCallBack = onCallBack;
-            _position.OnChangeValue += OnChangePosition;
-        }
-
-        private void OnChangePosition()
-        {
-            _position.OnChangeValue -= OnChangePosition;
-            _onCallBack.Invoke(new MoveCommand(_position.CurrentValue));
         }
     }
 }
