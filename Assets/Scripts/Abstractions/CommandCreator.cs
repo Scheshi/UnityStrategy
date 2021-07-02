@@ -34,10 +34,10 @@ namespace Abstractions
             _tokenSource = new CancellationTokenSource();
             try
             {
-                var result = await _awaitable.WithCancellation(_tokenSource.Token);
+                var result = await _awaitable.AsTask().WithCancellation(_tokenSource.Token);
                 onCallBack?.Invoke(GetCommand(result));
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
                 Debug.Log("Command " + nameof(T) + " is cancelled");
             }
@@ -45,7 +45,12 @@ namespace Abstractions
 
         public void Cancel()
         {
-            _tokenSource?.Cancel();
+            if (_tokenSource != null)
+            {
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
+                _tokenSource = null;
+            }
         }
 
         protected abstract T GetCommand(TParam result);

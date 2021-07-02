@@ -38,6 +38,7 @@ namespace UI.Presenter
             {
                 _info.Reset();
                 _control.ClearButtons();
+                _model.OnCancelCommandCreators();
             }
         }
 
