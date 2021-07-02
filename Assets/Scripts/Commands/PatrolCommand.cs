@@ -42,7 +42,7 @@ namespace Commands
             }
         }
         
-        private async Task<AsyncUtils.VoidObject> MoveTo(NavMeshAgent agent, Vector3 to)
+        private async Task<int> MoveTo(NavMeshAgent agent, Vector3 to)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace Commands
                 Debug.Log(e.Message);
             }
 
-            return new AsyncUtils.VoidObject();
+            return 1;
         }
     }
 }

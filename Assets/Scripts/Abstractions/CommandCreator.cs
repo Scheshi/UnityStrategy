@@ -7,15 +7,15 @@ namespace Abstractions
 {
     public abstract class CommandCreator<T> where T: ICommand
     {
-        public void Create(ICommandExecutor executor, Action<T> onCallBackHandle)
+        public void Create(ICommandExecutor executor, Action<T> onCallBackHandle, bool isComplete = false)
         {
             if (executor is CommandExecutorBase<T>)
             {
-                CreateCommand(onCallBackHandle);
+                CreateCommand(onCallBackHandle, isComplete);
             }
         }
 
-        protected abstract void CreateCommand(Action<T> onCallBack);
+        protected abstract void CreateCommand(Action<T> onCallBack, bool isComplete = false);
     }
 
     public abstract class CommandCreatorWithCancelled<T, TParam> : CommandCreator<T> where T : ICommand
@@ -29,17 +29,24 @@ namespace Abstractions
             _awaitable = awaitable;
         }
         
-        protected override async void CreateCommand(Action<T> onCallBack)
+        protected override async void CreateCommand(Action<T> onCallBack, bool isComplete = false)
         {
             _tokenSource = new CancellationTokenSource();
-            try
+            if (!isComplete)
             {
-                var result = await _awaitable.AsTask().WithCancellation(_tokenSource.Token);
-                onCallBack?.Invoke(GetCommand(result));
+                try
+                {
+                    var result = await _awaitable.AsTask().WithCancellation(_tokenSource.Token);
+                    onCallBack?.Invoke(GetCommand(result));
+                }
+                catch (OperationCanceledException)
+                {
+                    Debug.Log("Command " + nameof(T) + " is cancelled");
+                }
             }
-            catch (OperationCanceledException)
+            else if(_awaitable is ScriptableModel<TParam> model)
             {
-                Debug.Log("Command " + nameof(T) + " is cancelled");
+                onCallBack?.Invoke(GetCommand(model.CurrentValue));
             }
         }
 

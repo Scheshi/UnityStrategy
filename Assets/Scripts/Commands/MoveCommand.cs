@@ -25,13 +25,13 @@ namespace Commands
             {
                 await MoveTo(agent, _to).WithCancellation(_cancellationToken.Token);
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
                 return;
             }
         }
 
-        private async Task<AsyncUtils.VoidObject> MoveTo(NavMeshAgent agent, Vector3 to)
+        private async Task<int> MoveTo(NavMeshAgent agent, Vector3 to)
         {
             agent.SetDestination(to);
             while (Mathf.Abs(agent.transform.position.x - _to.x) < 0.1f &&
@@ -39,7 +39,8 @@ namespace Commands
             {
                 await Task.Yield();
             }
-            return new AsyncUtils.VoidObject();
+
+            return 1;
         }
     }
 }

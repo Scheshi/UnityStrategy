@@ -14,7 +14,7 @@ namespace Commands.Creators
             _collection = Resources.Load<AssetCollection>("Config/Collection");
         }
 
-        protected override void CreateCommand(Action<ICreateUnitCommand> onCallBack)
+        protected override void CreateCommand(Action<ICreateUnitCommand> onCallBack, bool isComplete = false)
         {
             onCallBack?.Invoke(_collection.InjectAsset(new ProduceUnitCommand()));
         }

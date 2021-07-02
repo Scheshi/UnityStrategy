@@ -21,15 +21,10 @@ public class GameStarter : MonoBehaviour
     private Presenter _presenter;
 
     [Inject]
-    private void InjectDependency(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> target)
+    private void InjectDependency(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> target, ControlModel model)
     {
         _input = new InputController(selectable, position, target);
-    }
-
-    [Inject]
-    private void InjectDependencyPresenter(ScriptableModel<ISelectableItem> item, ControlModel model)
-    {
-        _presenter = new Presenter(control, info, item, model);
+        _presenter = new Presenter(control, info, selectable, position, target, model);
     }
 
     private void Start()

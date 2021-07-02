@@ -14,6 +14,8 @@ namespace UI.Model
         [Inject] private CommandCreator<ICancelCommand> _cancelCommandCreator;
         [Inject] private CommandCreatorWithCancelled<IMoveCommand, Vector3> _moveCommandCreator;
         [Inject] private CommandCreatorWithCancelled<IPatrolCommand, Vector3> _patrolCommandCreator;
+        
+        
         private bool _isPending;
         
         public void OnCancelCommands()
@@ -32,14 +34,18 @@ namespace UI.Model
 
         public void OnClick(ICommandExecutor executor)
         {
-            OnCancelCommands();
-            _unitProduceCommandCreator.Create(executor, executor.Execute);
-            _attackCommandCreator.Create(executor, executor.Execute);
-            _cancelCommandCreator.Create(executor, executor.Execute);
-            _moveCommandCreator.Create(executor, executor.Execute);
-            _patrolCommandCreator.Create(executor, executor.Execute);
-            _isPending = true;
+            CreateCommand(executor);
+        }
 
+        public void CreateCommand(ICommandExecutor executor, bool isComplete = false)
+        {
+            OnCancelCommands();
+            _unitProduceCommandCreator.Create(executor, executor.Execute, isComplete);
+            _attackCommandCreator.Create(executor, executor.Execute, isComplete);
+            _cancelCommandCreator.Create(executor, executor.Execute, isComplete);
+            _moveCommandCreator.Create(executor, executor.Execute, isComplete);
+            _patrolCommandCreator.Create(executor, executor.Execute, isComplete);
+            _isPending = true;
         }
     }
 }

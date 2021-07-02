@@ -40,6 +40,7 @@ namespace Abstractions
 
     public interface ICommandExecutor
     {
+        public Type CommandType { get; }
         void Execute(ICommand command);
     }
     
