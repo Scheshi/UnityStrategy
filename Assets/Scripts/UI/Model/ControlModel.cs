@@ -34,12 +34,12 @@ namespace UI.Model
 
         public void OnClick(ICommandExecutor executor)
         {
+            OnCancelCommands();
             CreateCommand(executor);
         }
 
         public void CreateCommand(ICommandExecutor executor, bool isComplete = false)
         {
-            OnCancelCommands();
             _unitProduceCommandCreator.Create(executor, executor.Execute, isComplete);
             _attackCommandCreator.Create(executor, executor.Execute, isComplete);
             _cancelCommandCreator.Create(executor, executor.Execute, isComplete);

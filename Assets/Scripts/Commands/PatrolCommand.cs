@@ -32,7 +32,7 @@ namespace Commands
             {
                 while (true)
                 {
-                    await MoveTo(agent, _endPoint).WithCancellation(_cancellationToken.Token);
+                    await new MoveAwatable(agent, _endPoint, null).WithCancellation(_cancellationToken.Token);
                     (_startPoint, _endPoint) = (_endPoint, _startPoint);
                 }
             }
@@ -41,8 +41,40 @@ namespace Commands
                 Debug.Log(e);
             }
         }
+    }
+
+    public class MoveAwatable : IAwaitable<int>
+    {
+        private NavMeshAgent _agent;
+        private Vector3 _to;
+        private Action _onCancelled;
+
+        public MoveAwatable(NavMeshAgent agent, Vector3 to, Action onCancelled)
+        {
+            _agent = agent;
+            _to = to;
+            _onCancelled = onCancelled;
+        }
         
-        private async Task<int> MoveTo(NavMeshAgent agent, Vector3 to)
+        public IAwaiter<int> GetAwaiter()
+        {
+            return new MoveAwaiter(_agent, _to, _onCancelled);
+        }
+    }
+
+    public class MoveAwaiter : IAwaiter<int>
+    {
+        private bool _isComplete;
+        private Action _onComplete;
+        private Action _onCancelled;
+
+        public MoveAwaiter(NavMeshAgent agent, Vector3 to, Action onCancelled)
+        {
+            _onCancelled = onCancelled;
+            MoveTo(agent, to);
+        }
+        
+        private async void MoveTo(NavMeshAgent agent, Vector3 to)
         {
             try
             {
@@ -53,11 +85,27 @@ namespace Commands
                     await Task.Yield();
                 }
             }
-            catch (Exception e)
+            catch (OperationCanceledException)
             {
-                Debug.Log(e.Message);
+                _onCancelled?.Invoke();
             }
 
+            _isComplete = true;
+            _onComplete.Invoke();
+        }
+        
+        public void OnCompleted(Action continuation)
+        {
+            _onComplete = continuation;
+            if (IsCompleted)
+            {
+                continuation.Invoke();
+            }
+        }
+
+        public bool IsCompleted => _isComplete;
+        public int GetResult()
+        {
             return 1;
         }
     }

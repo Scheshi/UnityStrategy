@@ -23,11 +23,11 @@ namespace Commands
         {
             try
             {
-                await MoveTo(agent, _to).WithCancellation(_cancellationToken.Token);
+                await new MoveAwatable(agent, _to, () => {}).WithCancellation(_cancellationToken.Token);
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException e)
             {
-                return;
+                Debug.Log(e.Message);
             }
         }
 

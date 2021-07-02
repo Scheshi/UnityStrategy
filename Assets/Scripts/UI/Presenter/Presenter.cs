@@ -15,7 +15,7 @@ namespace UI.Presenter
         private ScriptableModel<IAttackable> _attackable;
         private InfoPanelView _info;
         private ControlPanelView _control;
-        private  ControlModel _model;
+        private ControlModel _model;
 
         
         public Presenter(ControlPanelView control, InfoPanelView info, ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> attackModel, ControlModel model)
@@ -30,8 +30,8 @@ namespace UI.Presenter
             _control.OnCancel += _model.OnCancelCommands;
             _position = position;
             _attackable = attackModel;
-            _position.OnChangeValue += OnChangePosition;
-            _attackable.OnChangeValue += OnChangeTarget;
+            //_position.OnChangeValue += OnChangePosition;
+            //_attackable.OnChangeValue += OnChangeTarget;
         }
 
         private void OnChangePosition()
