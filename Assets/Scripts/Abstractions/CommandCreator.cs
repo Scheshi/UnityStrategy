@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using UnityEngine;
+using Zenject;
 
 namespace Abstractions
 {
@@ -21,7 +22,7 @@ namespace Abstractions
     {
         private CancellationTokenSource _tokenSource;
         private IAwaitable<TParam> _awaitable;
-        protected event Action onCancelled = () => { };
+        [Inject(Id = "Command")] protected CancellationTokenSource CancellationCommandTokenSource;
 
         public void SetAwaitable(IAwaitable<TParam> awaitable)
         {
@@ -45,7 +46,6 @@ namespace Abstractions
         public void Cancel()
         {
             _tokenSource?.Cancel();
-            onCancelled.Invoke();
         }
 
         protected abstract T GetCommand(TParam result);

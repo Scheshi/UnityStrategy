@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Abstractions;
 using UnityEngine;
@@ -11,12 +12,13 @@ namespace Commands
     {
         private Vector3 _startPoint;
         private Vector3 _endPoint;
-        private bool _isStopPatrol;
+        private CancellationTokenSource _cancellationToken;
 
 
-        public PatrolCommand(Vector3 endPoint)
+        public PatrolCommand(Vector3 endPoint, CancellationTokenSource token)
         {
             _endPoint = endPoint;
+            _cancellationToken = token;
         }
 
         public void SetStartPosition(Vector3 startPosition)
@@ -26,26 +28,37 @@ namespace Commands
 
         public async void Patrol(NavMeshAgent agent)
         {
-            while (!_isStopPatrol)
+            try
             {
-                (_startPoint, _endPoint) = (_endPoint, _startPoint);
-                await MoveTo(agent, _endPoint);
+                while (true)
+                {
+                    await MoveTo(agent, _endPoint).WithCancellation(_cancellationToken.Token);
+                    (_startPoint, _endPoint) = (_endPoint, _startPoint);
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.Log(e);
             }
         }
         
-        private async Task MoveTo(NavMeshAgent agent, Vector3 to)
+        private async Task<AsyncUtils.VoidObject> MoveTo(NavMeshAgent agent, Vector3 to)
         {
-            agent.SetDestination(to);
-            while (Mathf.Abs(agent.transform.position.x - to.x) < 0.1f &&
-                   Mathf.Abs(agent.transform.position.z - to.z) < 0.1f)
+            try
             {
-                await Task.Yield();
+                agent.SetDestination(to);
+                while (Mathf.Abs(agent.transform.position.x - to.x) < 0.1f &&
+                       Mathf.Abs(agent.transform.position.z - to.z) < 0.1f)
+                {
+                    await Task.Yield();
+                }
             }
-        }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
 
-        public void StopPatrol()
-        {
-            _isStopPatrol = true;
+            return new AsyncUtils.VoidObject();
         }
     }
 }

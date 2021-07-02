@@ -1,3 +1,4 @@
+using System.Threading;
 using Abstractions;
 using Commands.Creators;
 using UI.Model;
@@ -16,6 +17,7 @@ namespace Utils
         
         public override void InstallBindings()
         {
+            Container.Bind<CancellationTokenSource>().WithId("Command").AsSingle();
             Container.Bind<ScriptableModel<ISelectableItem>>().FromInstance(model).AsSingle();
             Container.Bind<AssetCollection>().FromInstance(collection).AsSingle();
             Container.Bind<ScriptableModel<Vector3>>().FromInstance(position).AsSingle();

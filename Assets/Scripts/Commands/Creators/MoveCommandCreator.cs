@@ -13,6 +13,6 @@ namespace Commands.Creators
             SetAwaitable(position);
         }
         
-        protected override IMoveCommand GetCommand(Vector3 result) => new MoveCommand(result);
+        protected override IMoveCommand GetCommand(Vector3 result) => new MoveCommand(result, CancellationCommandTokenSource);
     }
 }

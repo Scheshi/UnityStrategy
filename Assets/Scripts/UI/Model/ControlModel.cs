@@ -1,3 +1,4 @@
+using System.Threading;
 using Abstractions;
 using UnityEngine;
 using Zenject;
@@ -7,6 +8,7 @@ namespace UI.Model
 {
     public class ControlModel
     {
+        [Inject(Id = "Command")] private CancellationTokenSource _tokenSource;
         [Inject] private CommandCreator<ICreateUnitCommand> _unitProduceCommandCreator;
         [Inject] private CommandCreatorWithCancelled<IAttackCommand, IAttackable> _attackCommandCreator;
         [Inject] private CommandCreator<ICancelCommand> _cancelCommandCreator;
@@ -15,11 +17,16 @@ namespace UI.Model
 
         public void OnCancelCommands()
         {
+            _tokenSource.Cancel();
+        }
+
+        public void OnCancelCommandCreators()
+        {
             _attackCommandCreator.Cancel();
             _moveCommandCreator.Cancel();
             _patrolCommandCreator.Cancel();
         }
-        
+
         public void OnClick(ICommandExecutor executor)
         {
             OnCancelCommands();
@@ -28,7 +35,7 @@ namespace UI.Model
             _cancelCommandCreator.Create(executor, executor.Execute);
             _moveCommandCreator.Create(executor, executor.Execute);
             _patrolCommandCreator.Create(executor, executor.Execute);
-            
+
         }
     }
 }
