@@ -23,7 +23,7 @@ namespace Commands
         {
             try
             {
-                await new MoveAwatable(agent, _to, () => {}).WithCancellation(_cancellationToken.Token);
+                var _ = await new MoveAwatable(agent, _to, () => {}).WithCancellation(_cancellationToken.Token);
             }
             catch (OperationCanceledException e)
             {

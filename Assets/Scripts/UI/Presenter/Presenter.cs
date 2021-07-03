@@ -74,12 +74,20 @@ namespace UI.Presenter
             {
                 _info.SetInfo(_selectable.CurrentValue.Icon, _selectable.CurrentValue.Name, _selectable.CurrentValue.CurrentHealth, _selectable.CurrentValue.MaxHealth);
                 SetButtons(_selectable.CurrentValue);
-                ICommandExecutor executor =
-                    _selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(ProduceUnitCommand));
-                if (executor != null)
+                if (_selectable.CurrentValue.Executors != null && _produceModel.CurrentValue > 0)
                 {
-                    _info.StartProduce();
-                    _info.SetValueProduce(_produceModel.CurrentValue);
+                    ICommandExecutor executor =
+                        _selectable.CurrentValue.Executors.FirstOrDefault(x =>
+                            x.CommandType == typeof(ICreateUnitCommand));
+                    if (executor != null)
+                    {
+                        _info.StartProduce();
+                        _info.SetValueProduce(_produceModel.CurrentValue);
+                    }
+                    else
+                    {
+                        _info.EndProduce();
+                    }
                 }
                 else
                 {
