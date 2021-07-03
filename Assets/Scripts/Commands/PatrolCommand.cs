@@ -13,6 +13,7 @@ namespace Commands
         private Vector3 _startPoint;
         private Vector3 _endPoint;
         private CancellationTokenSource _cancellationToken;
+        private bool _isCommandPending;
 
 
         public PatrolCommand(Vector3 endPoint, CancellationTokenSource token)
@@ -24,6 +25,7 @@ namespace Commands
         public void SetStartPosition(Vector3 startPosition)
         {
             _startPoint = startPosition;
+            _isCommandPending = true;
         }
 
         public async void Patrol(NavMeshAgent agent)
@@ -32,7 +34,10 @@ namespace Commands
             {
                 while (true)
                 {
+                    if (!_isCommandPending) continue;
+                    _isCommandPending = false;
                     await new MoveAwatable(agent, _endPoint, null).WithCancellation(_cancellationToken.Token);
+                    _isCommandPending = true;
                     (_startPoint, _endPoint) = (_endPoint, _startPoint);
                 }
             }

@@ -17,7 +17,7 @@ namespace UI.Model
         
         
         private bool _isPending;
-        
+
         public void OnCancelCommands()
         {
             _tokenSource.Cancel();
