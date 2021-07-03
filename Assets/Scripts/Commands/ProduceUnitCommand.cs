@@ -13,25 +13,31 @@ namespace Commands
         [InjectAsset("PT_Medieval_Male_Peasant_01_e")]
         private GameObject _unitPrefab;
 
+        private ProduceModel _produceValueModel;
+
         private int _timeToSpawnMilliseconds = 10000;
-        private int _currentToSpawn;
         private int _millisecondsPerRefresh = 100;
+
+        public ProduceUnitCommand(ProduceModel produceModel)
+        {
+            _produceValueModel = produceModel;
+        }
 
         public Vector3 SpawnPosition { get; set; }
         
         public async void InstantiateUnit()
         {
-            _currentToSpawn = _timeToSpawnMilliseconds;
+            var currentToSpawn = _timeToSpawnMilliseconds;
+            _produceValueModel.StartProduce();
+            _produceValueModel.SetValue((float)currentToSpawn / _timeToSpawnMilliseconds);
             Debug.Log("Starting create unit");
-            await Task.Run(async () =>
+            while (currentToSpawn > 0)
             {
-                while (_currentToSpawn > 0)
-                {
-                    _currentToSpawn -= _millisecondsPerRefresh;
+                    currentToSpawn -= _millisecondsPerRefresh;
+                    _produceValueModel.SetValue((float)currentToSpawn / _timeToSpawnMilliseconds);
                     await Task.Delay(_millisecondsPerRefresh);
-                }
-                _currentToSpawn = _timeToSpawnMilliseconds;
-            });
+            }
+            _produceValueModel.EndProduce();
             
             Debug.Log("Create unit");
             var unit = Object.Instantiate(_unitPrefab, SpawnPosition, Quaternion.identity);

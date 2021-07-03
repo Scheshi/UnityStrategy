@@ -14,9 +14,11 @@ namespace Utils
         [SerializeField] private AssetCollection collection;
         [SerializeField] private ScriptableModel<Vector3> position;
         [SerializeField] private ScriptableModel<IAttackable> target;
+        [SerializeField] private ProduceModel produceModel;
         
         public override void InstallBindings()
         {
+            Container.Bind<ProduceModel>().FromInstance(produceModel).AsSingle();
             Container.Bind<CancellationTokenSource>().WithId("Command").AsSingle();
             Container.Bind<ScriptableModel<ISelectableItem>>().FromInstance(model).AsSingle();
             Container.Bind<AssetCollection>().FromInstance(collection).AsSingle();
