@@ -12,12 +12,28 @@ namespace Abstractions
 
     public interface ICreateUnitCommand : ICommand
     {
-        GameObject InstantiateUnit();
+        Vector3 SpawnPosition { get; set; }
+        void InstantiateUnit();
     }
-    
-    public interface IAttackCommand: ICommand{}
+
+    public interface IAttackCommand : ICommand
+    {
+        void Attack(Vector3 ownerPosition);
+    }
     public interface ICancelCommand: ICommand{}
-    public interface IMoveCommand: ICommand{}
+
+    public interface IMoveCommand : ICommand
+    {
+        event Action OnEndPath;
+        void Move(Transform transform);
+    }
+
+    public interface IPatrolCommand : ICommand
+    {
+        void SetStartPosition(Vector3 startPosition);
+        
+        void Patrol(Transform movingTransform);
+    }
 
 
 

@@ -1,31 +1,52 @@
 using System;
+using Abstractions;
 using Commands;
 using Core.Buildings;
 using Input;
+using UI.Model;
 using UI.Presenter;
+using UI.View;
 using UnityEngine;
+using Zenject;
 
 
 public class GameStarter : MonoBehaviour
 {
+    [SerializeField] private ControlPanelView control;
+    [SerializeField] private InfoPanelView info;
     [SerializeField] private TestBuilding startBuilding;
     [SerializeField] private TestBuilding secondBuilding;
-    private InputView _input;
+    private InputController _input;
     private BuildingController _startBuildingController;
     private Presenter _presenter;
 
-    private void Awake()
+    [Inject]
+    private void InjectDependency(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> target)
     {
-        _input = new GameObject("Input").AddComponent<InputView>();
+        _input = new InputController(selectable, position, target);
+    }
+
+    [Inject]
+    private void InjectDependencyPresenter(ScriptableModel<ISelectableItem> item, ControlModel model)
+    {
+        _presenter = new Presenter(control, info, item, model);
+    }
+
+    private void Start()
+    {
         _input.Init();
         _startBuildingController = new BuildingController(startBuilding);
-        startBuilding.SetExecutors(new ProduceUnitCommandExecutor());
-        //_secondBuildingController = new BuildingController(secondBuilding);
-        _presenter = new Presenter();
+        startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding.transform.position + Vector3.forward * 10));
+    }
+
+    private void Update()
+    {
+        _input.Update();
     }
 
     private void OnDestroy()
     {
         _presenter.Dispose();
+        _input.Dispose();
     }
 }

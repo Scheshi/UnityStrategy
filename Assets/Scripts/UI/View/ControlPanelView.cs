@@ -14,6 +14,7 @@ public class ControlPanelView : MonoBehaviour
     [SerializeField] private Button moveButton;
     [SerializeField] private Button cancelButton;
     [SerializeField] private Button unitProduceButton;
+    [SerializeField] private Button patrolButton;
 
     private Dictionary<Type, Button> _switchDictionary;
     
@@ -37,6 +38,10 @@ public class ControlPanelView : MonoBehaviour
             {
                 typeof(CommandExecutorBase<ICancelCommand>),
                 cancelButton
+            },
+            {
+                typeof(CommandExecutorBase<IPatrolCommand>),
+                patrolButton
             }
         };
         ClearButtons();

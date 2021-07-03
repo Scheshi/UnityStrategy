@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Abstractions;
 using UnityEngine;
 
@@ -14,25 +15,36 @@ namespace Core.Buildings
         }
         [SerializeField] private string itemName;
         [SerializeField] private int maxHealth;
+        [SerializeField] private Sprite icon;
         private Material _outlineMaterial;
         private Material[] _defaultMaterials;
         private Meshes[] _meshes;
         private int _currentHealth;
 
         public ICommandExecutor[] Executors { get; private set; }
+        public Transform Transform => transform;
         public event Action OnSelect = () => { };
         public string Name => itemName;
         public int CurrentHealth => _currentHealth;
         public int MaxHealth => maxHealth;
+        public void Damage(int point)
+        {
+            _currentHealth -= point;
+        }
+
+        public Sprite Icon => icon;
 
         private void Start()
         {
             var meshes = GetComponentsInChildren<MeshRenderer>();
-            _meshes = new Meshes[meshes.Length];
+            var meshList = new List<Meshes>();
+            
             for(int i = 0; i < meshes.Length; i++)
             {
-                _meshes[i] = new Meshes() {Renderer = meshes[i], DefaultMaterial = meshes[i].material};
+                meshList.Add(new Meshes() {Renderer = meshes[i], DefaultMaterial = meshes[i].material});
             }
+
+            _meshes = meshList.ToArray();
             _outlineMaterial = Resources.Load<Material>("Materials/Outline");
             _currentHealth = maxHealth;
         }

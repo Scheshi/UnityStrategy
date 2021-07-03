@@ -8,10 +8,14 @@ namespace Commands
     {
         [InjectAsset("PT_Medieval_Male_Peasant_01_e")]
         private GameObject _unitPrefab;
-        public GameObject InstantiateUnit()
+
+        public Vector3 SpawnPosition { get; set; }
+        
+        public void InstantiateUnit()
         {
             Debug.Log("Create unit");
-            return _unitPrefab;
+            var unit = Object.Instantiate(_unitPrefab, SpawnPosition, Quaternion.identity);
+            unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit), new AttackCommandExecutor(unit.transform), new PatrolCommandExecutor(unit.transform));
         }
     }
 }
