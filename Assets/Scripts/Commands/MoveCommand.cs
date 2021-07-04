@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abstractions;
 using UnityEngine;
 using UnityEngine.AI;
+using Utils;
 
 
 namespace Commands
@@ -12,22 +13,38 @@ namespace Commands
     {
         private Vector3 _to;
         private CancellationTokenSource _cancellationToken;
+        private CancellationModel _cancellation;
 
-        public MoveCommand(Vector3 to, CancellationTokenSource token)
+        public MoveCommand(Vector3 to, CancellationModel cancellationModel)
         {
             _to = to;
-            _cancellationToken = token;
+            _cancellation = cancellationModel;
+            _cancellation.OnChangeValue += Cancel;
+        }
+
+        private void Cancel()
+        {
+            if (!_cancellation.CurrentValue)
+            {
+                _cancellationToken?.Cancel();
+            }
         }
 
         public async void Move(NavMeshAgent agent)
         {
+            _cancellationToken = new CancellationTokenSource();
             try
             {
-                var _ = await new MoveAwatable(agent, _to, () => {}).WithCancellation(_cancellationToken.Token);
+                while (true)
+                {
+                    agent.SetDestination(_to);
+                    await new MoveAwatable(agent, _to, null).WithCancellation(_cancellationToken.Token);
+                }
             }
-            catch (OperationCanceledException e)
+            catch(Exception e)
             {
-                Debug.Log(e.Message);
+                agent.SetDestination(agent.transform.position);
+                Debug.Log(e);
             }
         }
 

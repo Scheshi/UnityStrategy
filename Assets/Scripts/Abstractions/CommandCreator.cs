@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using UnityEngine;
+using Utils;
 using Zenject;
 
 namespace Abstractions
@@ -22,7 +23,9 @@ namespace Abstractions
     {
         private CancellationTokenSource _tokenSource;
         private IAwaitable<TParam> _awaitable;
-        [Inject(Id = "Command")] protected CancellationTokenSource CancellationCommandTokenSource;
+        [Inject] private CancellationModel _cancellation;
+
+        protected CancellationModel CancellationModel => _cancellation;
 
         public void SetAwaitable(IAwaitable<TParam> awaitable)
         {

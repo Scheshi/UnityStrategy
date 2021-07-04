@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abstractions;
 using UnityEngine;
 using UnityEngine.AI;
+using Utils;
 
 
 namespace Commands
@@ -13,13 +14,23 @@ namespace Commands
         private Vector3 _startPoint;
         private Vector3 _endPoint;
         private CancellationTokenSource _cancellationToken;
+        private CancellationModel _cancellation;
         private bool _isCommandPending;
 
 
-        public PatrolCommand(Vector3 endPoint, CancellationTokenSource token)
+        public PatrolCommand(Vector3 endPoint, CancellationModel model)
         {
             _endPoint = endPoint;
-            _cancellationToken = token;
+            _cancellation = model;
+            model.OnChangeValue += Cancel;
+        }
+
+        private void Cancel()
+        {
+            if (!_cancellation.CurrentValue)
+            {
+                _cancellationToken?.Cancel();
+            }
         }
 
         public void SetStartPosition(Vector3 startPosition)
@@ -30,19 +41,19 @@ namespace Commands
 
         public async void Patrol(NavMeshAgent agent)
         {
+            _cancellationToken = new CancellationTokenSource();
             try
             {
                 while (true)
                 {
-                    if (!_isCommandPending) continue;
-                    _isCommandPending = false;
+                    agent.SetDestination(_endPoint);
                     await new MoveAwatable(agent, _endPoint, null).WithCancellation(_cancellationToken.Token);
-                    _isCommandPending = true;
                     (_startPoint, _endPoint) = (_endPoint, _startPoint);
                 }
             }
             catch(Exception e)
             {
+                agent.SetDestination(agent.transform.position);
                 Debug.Log(e);
             }
         }
@@ -83,16 +94,16 @@ namespace Commands
         {
             try
             {
-                agent.SetDestination(to);
-                while (Mathf.Abs(agent.transform.position.x - to.x) < 0.1f &&
-                       Mathf.Abs(agent.transform.position.z - to.z) < 0.1f)
+                while (agent.transform.position != to)
                 {
                     await Task.Yield();
                 }
             }
-            catch (OperationCanceledException)
+            catch (Exception e)
             {
-                _onCancelled?.Invoke();
+                //Only main thread
+                //TODO: Подумать над нормальной реализацией, но отмена работает
+                //Debug.Log(e.Message);
             }
 
             _isComplete = true;

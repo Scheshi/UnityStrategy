@@ -15,9 +15,11 @@ namespace Utils
         [SerializeField] private ScriptableModel<Vector3> position;
         [SerializeField] private ScriptableModel<IAttackable> target;
         [SerializeField] private ProduceModel produceModel;
+        [SerializeField] private CancellationModel cancellation;
         
         public override void InstallBindings()
         {
+            Container.Bind<CancellationModel>().FromInstance(cancellation).AsSingle();
             Container.Bind<ProduceModel>().FromInstance(produceModel).AsSingle();
             Container.Bind<CancellationTokenSource>().WithId("Command").AsSingle();
             Container.Bind<ScriptableModel<ISelectableItem>>().FromInstance(model).AsSingle();

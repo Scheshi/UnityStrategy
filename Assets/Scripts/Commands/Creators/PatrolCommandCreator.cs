@@ -15,7 +15,7 @@ namespace Commands.Creators
 
         protected override IPatrolCommand GetCommand(Vector3 result)
         {
-            var command = new PatrolCommand(result, CancellationCommandTokenSource);
+            var command = new PatrolCommand(result, CancellationModel);
             return command;
         } 
     }

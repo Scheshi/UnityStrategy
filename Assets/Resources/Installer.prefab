@@ -48,3 +48,4 @@ MonoBehaviour:
   position: {fileID: 11400000, guid: 6710b09889d7a7b448705f0484a102fc, type: 2}
   target: {fileID: 11400000, guid: 98e9851014161e5438c2c00a6320628d, type: 2}
   produceModel: {fileID: 11400000, guid: 5dc05c3e4af203f489d21c2dc29956c4, type: 2}
+  cancellation: {fileID: 11400000, guid: 7f63c5a931dee9f40929c0106e2b43f7, type: 2}
