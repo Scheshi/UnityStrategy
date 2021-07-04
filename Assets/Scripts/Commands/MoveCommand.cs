@@ -44,7 +44,7 @@ namespace Commands
             catch(Exception e)
             {
                 agent.SetDestination(agent.transform.position);
-                Debug.Log(e);
+                //Debug.Log(e);
             }
         }
 

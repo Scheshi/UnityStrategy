@@ -41,6 +41,7 @@ namespace UI.Model
 
         public void CreateCommand(ICommandExecutor executor, bool isComplete = false)
         {
+            _cancellation.SetValue(false);
             _unitProduceCommandCreator.Create(executor, executor.Execute, isComplete);
             _attackCommandCreator.Create(executor, executor.Execute, isComplete);
             _cancelCommandCreator.Create(executor, executor.Execute, isComplete);

@@ -38,8 +38,8 @@ namespace UI.Presenter
             _produceModel.OnStartProduce += OnStartProduce;
             _produceModel.OnEndProduce += OnEndProduce;
             _produceModel.OnChangeValue += OnChangeProduceValue;
-            //_position.OnChangeValue += OnChangePosition;
-            //_attackable.OnChangeValue += OnChangeTarget;
+            _position.OnChangeValue += OnChangePosition;
+            _attackable.OnChangeValue += OnChangeTarget;
         }
 
         private void OnChangePosition()
