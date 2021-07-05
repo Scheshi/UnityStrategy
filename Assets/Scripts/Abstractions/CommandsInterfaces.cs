@@ -1,5 +1,7 @@
 using System;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Abstractions
 {
@@ -24,24 +26,25 @@ namespace Abstractions
 
     public interface IMoveCommand : ICommand
     {
-        event Action OnEndPath;
-        void Move(Transform transform);
+        void Move(NavMeshAgent agent);
     }
 
     public interface IPatrolCommand : ICommand
     {
         void SetStartPosition(Vector3 startPosition);
         
-        void Patrol(Transform movingTransform);
+        void Patrol(NavMeshAgent movingTransform);
     }
 
 
 
     public interface ICommandExecutor
     {
+        public Type CommandType { get; }
         void Execute(ICommand command);
     }
     
+
     public abstract class CommandExecutorBase<T> : ICommandExecutor where T: ICommand
     {
         public Type CommandType => typeof(T);
@@ -49,7 +52,5 @@ namespace Abstractions
         public void Execute(ICommand command) => ExecuteTypeCommand((T) command);
 
         protected abstract void ExecuteTypeCommand(T command);
-
-
     }
 }

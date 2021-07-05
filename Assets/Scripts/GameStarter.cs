@@ -7,6 +7,7 @@ using UI.Model;
 using UI.Presenter;
 using UI.View;
 using UnityEngine;
+using Utils;
 using Zenject;
 
 
@@ -21,15 +22,10 @@ public class GameStarter : MonoBehaviour
     private Presenter _presenter;
 
     [Inject]
-    private void InjectDependency(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> target)
+    private void InjectDependency(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> target, ControlModel model, ProduceModel produceModel)
     {
         _input = new InputController(selectable, position, target);
-    }
-
-    [Inject]
-    private void InjectDependencyPresenter(ScriptableModel<ISelectableItem> item, ControlModel model)
-    {
-        _presenter = new Presenter(control, info, item, model);
+        _presenter = new Presenter(control, info, selectable, position, target, model, produceModel);
     }
 
     private void Start()

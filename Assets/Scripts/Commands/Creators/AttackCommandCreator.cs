@@ -1,25 +1,17 @@
-using System;
 using Abstractions;
 using Zenject;
 
+
 namespace Commands.Creators
 {
-    public sealed class AttackCommandCreator: CommandCreator<IAttackCommand>
+    public sealed class AttackCommandCreator: CommandCreatorWithCancelled<IAttackCommand, IAttackable>
     {
-        [Inject] private ScriptableModel<IAttackable> _model;
-        private Action<IAttackCommand> _action;
-        
-        protected override void CreateCommand(Action<IAttackCommand> onCallBack)
+        [Inject]
+        private AttackCommandCreator(ScriptableModel<IAttackable> model)
         {
-            _action = onCallBack;
-            _model.OnChangeValue += ModelOnOnChangeValue;
+            SetAwaitable(model);
         }
 
-        private void ModelOnOnChangeValue()
-        {
-            _action?.Invoke(new AttackCommand(_model.CurrentValue));
-            _model.OnChangeValue -= ModelOnOnChangeValue;
-            _action = null;
-        }
+        protected override IAttackCommand GetCommand(IAttackable target) => new AttackCommand(target);
     }
 }

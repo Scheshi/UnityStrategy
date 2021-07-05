@@ -43,9 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75922bc53e5342d6a98c6a3d72577285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlPanelView: {fileID: 0}
-  infoPanelView: {fileID: 0}
   model: {fileID: 11400000, guid: 4d1d943349eedf64ca965b6cdcc6e6b1, type: 2}
   collection: {fileID: 11400000, guid: d490743587b841e4293ba378f9c50e6b, type: 2}
   position: {fileID: 11400000, guid: 6710b09889d7a7b448705f0484a102fc, type: 2}
   target: {fileID: 11400000, guid: 98e9851014161e5438c2c00a6320628d, type: 2}
+  produceModel: {fileID: 11400000, guid: 5dc05c3e4af203f489d21c2dc29956c4, type: 2}
+  cancellation: {fileID: 11400000, guid: 7f63c5a931dee9f40929c0106e2b43f7, type: 2}

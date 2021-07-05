@@ -36,10 +36,6 @@ public class ControlPanelView : MonoBehaviour
                 unitProduceButton
             },
             {
-                typeof(CommandExecutorBase<ICancelCommand>),
-                cancelButton
-            },
-            {
                 typeof(CommandExecutorBase<IPatrolCommand>),
                 patrolButton
             }
@@ -71,5 +67,16 @@ public class ControlPanelView : MonoBehaviour
                 }
             }
         }
+        cancelButton.onClick.AddListener(OnCancel.Invoke);
     }
+
+    private void OnDestroy()
+    {
+        ClearButtons();
+        _switchDictionary.Clear();
+        _switchDictionary = null;
+        cancelButton.onClick.RemoveAllListeners();
+    }
+
+    public event Action OnCancel = () => {};
 }

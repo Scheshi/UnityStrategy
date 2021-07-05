@@ -9,6 +9,7 @@ namespace UI.View
         [SerializeField] private Image icon;
         [SerializeField] private Text textName;
         [SerializeField] private Slider healthBar;
+        [SerializeField] private Slider produceSlider;
 
         public void SetInfo(Sprite itemIcon, string itemName, float healthPercent)
         {
@@ -35,6 +36,24 @@ namespace UI.View
             icon.gameObject.SetActive(false);
             textName.gameObject.SetActive(false);
             healthBar.gameObject.SetActive(false);
+        }
+
+        public void EndProduce()
+        {
+            produceSlider.gameObject.SetActive(false);
+        }
+
+        public void SetValueProduce(float value)
+        {
+            if (produceSlider.gameObject.activeSelf)
+            {
+                produceSlider.value = produceSlider.maxValue - value;
+            }
+        }
+
+        public void StartProduce()
+        {
+            produceSlider.gameObject.SetActive(true);
         }
     }
 }
