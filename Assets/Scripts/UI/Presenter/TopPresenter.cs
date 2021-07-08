@@ -2,13 +2,16 @@ using System;
 using Abstractions;
 using UI.View;
 using UniRx;
-using UnityEngine;
 using Zenject;
+using UnityEngine;
+using Object = UnityEngine.Object;
+
 
 namespace UI.Presenter
 {
     public class TopPresenter: IDisposable
     {
+        private const string PathToMenuPrefab = "MenuPanel";
         private TopPanelView _topPanel;
         [Inject] private ITimeModel _timeModel;
         
@@ -22,7 +25,13 @@ namespace UI.Presenter
 
         private void OnMenuButtonClick()
         {
-            Debug.Log("Show menu");
+            Time.timeScale = 0.0f;
+            MenuPanelView view = Object.Instantiate(Resources.Load<MenuPanelView>(PathToMenuPrefab), _topPanel.transform);
+            view.ContinueButtonObservable.Subscribe(_ =>
+            {
+                Time.timeScale = 1.0f;
+                Object.Destroy(view.gameObject);
+            });
         }
 
         public void Dispose()
