@@ -30,16 +30,17 @@ namespace Commands
             var currentToSpawn = _timeToSpawnMilliseconds;
             _produceValueModel.StartProduce();
             _produceValueModel.SetValue((float)currentToSpawn / _timeToSpawnMilliseconds);
-            Debug.Log("Starting create unit");
             while (currentToSpawn > 0)
             {
+                if (Time.timeScale > 0)
+                {
                     currentToSpawn -= _millisecondsPerRefresh;
-                    _produceValueModel.SetValue((float)currentToSpawn / _timeToSpawnMilliseconds);
-                    await Task.Delay(_millisecondsPerRefresh);
+                    _produceValueModel.SetValue((float) currentToSpawn / _timeToSpawnMilliseconds);
+                }
+                await Task.Delay(_millisecondsPerRefresh);
             }
             _produceValueModel.EndProduce();
             
-            Debug.Log("Create unit");
             var unit = Object.Instantiate(_unitPrefab, SpawnPosition, Quaternion.identity);
             unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit.GetComponent<NavMeshAgent>()), new AttackCommandExecutor(unit.transform), new PatrolCommandExecutor(unit.GetComponent<NavMeshAgent>()));
         }
