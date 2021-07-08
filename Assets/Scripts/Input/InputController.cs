@@ -1,5 +1,6 @@
 using System;
 using Abstractions;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -22,11 +23,8 @@ namespace Input
         public void Init()
         {
             _mainCamera = Camera.main;
-        }
-        
-        public void Update()
-        {
-            if (UnityEngine.Input.GetButtonDown("Fire1"))
+            var leftClick = Observable.EveryUpdate().Where(_ => UnityEngine.Input.GetButtonDown("Fire1"));
+            leftClick.Subscribe(_ =>
             {
                 if (Physics.Raycast(_mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
                 {
@@ -36,19 +34,20 @@ namespace Input
                         _selectable.SetValue(selectable); 
                     }
                 }
-            }
-
-            if (UnityEngine.Input.GetButtonDown("Fire2"))
+            });
+            var rightClick = Observable.EveryUpdate().Where(_ => UnityEngine.Input.GetButtonDown("Fire2"));
+            rightClick.Subscribe(_ =>
             {
-                if (Physics.Raycast(_mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit)) 
+                if (Physics.Raycast(_mainCamera.ScreenPointToRay(UnityEngine.Input.mousePosition), out var hit))
                 {
                     if (hit.collider.gameObject.TryGetComponent(out IAttackable target))
                     {
                         _target.SetValue(target);
                     }
+
                     _position.SetValue(hit.point);
                 }
-            }
+            });
         }
 
         public void Dispose()

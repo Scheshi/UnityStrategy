@@ -43,11 +43,6 @@ public class GameStarter : MonoBehaviour
         startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding.transform.position + Vector3.forward * 10));
     }
 
-    private void Update()
-    {
-        _input.Update();
-    }
-
     private void OnDestroy()
     {
         _presenter.Dispose();

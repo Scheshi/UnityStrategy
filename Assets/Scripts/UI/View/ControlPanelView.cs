@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abstractions;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,12 @@ public class ControlPanelView : MonoBehaviour
     [SerializeField] private Button unitProduceButton;
     [SerializeField] private Button patrolButton;
 
+    public IObservable<Unit> AttackClickObservable => attackButton.onClick.AsObservable();
+    public IObservable<Unit> MoveClickObservable => moveButton.OnClickAsObservable();
+    public IObservable<Unit> CancelClickObservable => cancelButton.OnClickAsObservable();
+    public IObservable<Unit> UnitProduceObservable => unitProduceButton.OnClickAsObservable();
+    public IObservable<Unit> PatrolButtonObservable => patrolButton.OnClickAsObservable();
+    
     private Dictionary<Type, Button> _switchDictionary;
     
     // Start is called before the first frame update

@@ -32,9 +32,12 @@ namespace Commands
             _produceValueModel.SetValue((float)currentToSpawn / _timeToSpawnMilliseconds);
             while (currentToSpawn > 0)
             {
+                if (Time.timeScale > 0)
+                {
                     currentToSpawn -= _millisecondsPerRefresh;
-                    _produceValueModel.SetValue((float)currentToSpawn / _timeToSpawnMilliseconds);
-                    await Task.Delay(_millisecondsPerRefresh);
+                    _produceValueModel.SetValue((float) currentToSpawn / _timeToSpawnMilliseconds);
+                }
+                await Task.Delay(_millisecondsPerRefresh);
             }
             _produceValueModel.EndProduce();
             
