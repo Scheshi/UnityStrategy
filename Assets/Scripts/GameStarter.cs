@@ -13,6 +13,7 @@ using Zenject;
 
 public class GameStarter : MonoBehaviour
 {
+    [SerializeField] private TopPanelView topPanelView;
     [SerializeField] private ControlPanelView control;
     [SerializeField] private InfoPanelView info;
     [SerializeField] private TestBuilding startBuilding;
@@ -20,12 +21,19 @@ public class GameStarter : MonoBehaviour
     private InputController _input;
     private BuildingController _startBuildingController;
     private Presenter _presenter;
+    private TopPresenter _topPresenter;
 
     [Inject]
     private void InjectDependency(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> target, ControlModel model, ProduceModel produceModel)
     {
         _input = new InputController(selectable, position, target);
         _presenter = new Presenter(control, info, selectable, position, target, model, produceModel);
+    }
+
+    [Inject]
+    private void InjectDependency(ITimeModel timeModel)
+    {
+        _topPresenter = new TopPresenter(topPanelView, timeModel);
     }
 
     private void Start()

@@ -3,13 +3,14 @@ using Abstractions;
 using UI.View;
 using UniRx;
 using UnityEngine;
+using Zenject;
 
 namespace UI.Presenter
 {
     public class TopPresenter: IDisposable
     {
         private TopPanelView _topPanel;
-        private ITimeModel _timeModel;
+        [Inject] private ITimeModel _timeModel;
         
         public TopPresenter(TopPanelView view, ITimeModel time)
         {

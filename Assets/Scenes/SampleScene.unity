@@ -4543,6 +4543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ce72898c66de3f408fa576877ef0170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  topPanelView: {fileID: 1714735142}
   control: {fileID: 523769298}
   info: {fileID: 823843190}
   startBuilding: {fileID: 351874214}
@@ -7823,7 +7824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 413024171}
-  menuButton: {fileID: 0}
+  menuButton: {fileID: 1568568174}
 --- !u!114 &1714735143
 MonoBehaviour:
   m_ObjectHideFlags: 0
