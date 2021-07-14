@@ -25,7 +25,7 @@ namespace Utils
                 InjectAssetAttribute attribute = fieldInfo.GetCustomAttribute<InjectAssetAttribute>();
                 if (attribute != null)
                 {
-                    fieldInfo.SetValue(obj, FindObject(attribute.AssetName));
+                    fieldInfo.SetValue(obj, FindObject(attribute.AssetName).GetComponent<T>());
                 }
             }
             return obj;
