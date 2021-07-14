@@ -6,11 +6,8 @@ using UnityEngine;
 
 namespace Commands
 {
-    public class ProduceUnitCommandExecutor : CommandExecutorBase<ICreateUnitCommand>
+    public class ProduceUnitCommandExecutor : CommandExecutorBase<ICreateUnitCommand>, IUnitProducer
     {
-        public IObservable<float> CurrentUnitProduce { get; } = new ReactiveProperty<float>();
-        public IObservable<IUnit> CurrentUnit { get; } = new ReactiveProperty<IUnit>();
-        public IReactiveCollection<IUnit> UnitsQueue { get; } = new ReactiveCollection<IUnit>();
         public Vector3 SpawnPosition { get;}
 
         public ProduceUnitCommandExecutor(Vector3 spawnPosition)
@@ -22,6 +19,12 @@ namespace Commands
         {
             command.SpawnPosition = SpawnPosition;
             command.InstantiateUnit();
+        }
+
+        public IReadOnlyReactiveCollection<IProductionTask> Queue { get; } = new ReactiveCollection<IProductionTask>();
+        public void Cancel(int index)
+        {
+            throw new NotImplementedException();
         }
     }
 }
