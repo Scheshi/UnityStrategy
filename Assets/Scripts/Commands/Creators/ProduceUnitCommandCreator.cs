@@ -10,6 +10,7 @@ namespace Commands.Creators
     public sealed class ProduceUnitCommandCreator: CommandCreator<ICreateUnitCommand>
     {
         private AssetCollection _collection;
+        
         [Inject] private ProduceModel _produceModel;
         
         public ProduceUnitCommandCreator()

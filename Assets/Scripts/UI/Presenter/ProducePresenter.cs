@@ -1,18 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Abstractions;
+using Commands;
+using UI.View;
+using Utils;
 
-public class ProducePresenter : MonoBehaviour
+
+public class ProducePresenter
 {
-    // Start is called before the first frame update
-    void Start()
+    private ProducePanelView _producePanel;
+    private ProduceModel _model;
+    private SelectableModel _selectable;
+
+    public ProducePresenter(ProducePanelView view, SelectableModel selectable)
     {
-        
+        _producePanel = view;
+        _selectable = selectable;
+        _selectable.OnChangeValue += SelectableOnChangeValue;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SelectableOnChangeValue()
     {
-        
+        if (_selectable.CurrentValue.Executors.Has(out ICommandExecutor executor,
+            x => x.CommandType == typeof(ICreateUnitCommand)))
+        {
+            
+        }
     }
 }
