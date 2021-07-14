@@ -1,4 +1,4 @@
-using System.Threading;
+using System.Collections.Generic;
 using Abstractions;
 using UnityEngine;
 using Utils;
@@ -15,8 +15,8 @@ namespace UI.Model
         [Inject] private CommandCreator<ICancelCommand> _cancelCommandCreator;
         [Inject] private CommandCreatorWithCancelled<IMoveCommand, Vector3> _moveCommandCreator;
         [Inject] private CommandCreatorWithCancelled<IPatrolCommand, Vector3> _patrolCommandCreator;
-        
-        
+
+        private List<ITick> _tickables = new List<ITick>();
         private bool _isPending;
 
         public void OnCancelCommands()

@@ -39,6 +39,6 @@ namespace Abstractions
 
     public interface IUnit : ISelectableItem
     {
-        GameObject GameObject {get};
+        GameObject GameObject { get; }
     }
 }

@@ -1,9 +1,6 @@
-using System.Threading.Tasks;
 using Abstractions;
 using UnityEngine;
-using UnityEngine.AI;
 using Utils;
-using Object = UnityEngine.Object;
 
 
 namespace Commands
@@ -15,9 +12,6 @@ namespace Commands
 
         private ProduceModel _produceValueModel;
 
-        private int _timeToSpawnMilliseconds = 10000;
-        private int _millisecondsPerRefresh = 100;
-
         public ProduceUnitCommand(ProduceModel produceModel)
         {
             _produceValueModel = produceModel;
@@ -28,10 +22,5 @@ namespace Commands
         public Sprite Icon => _unitPrefab.Icon;
         public GameObject UnitPrefab => _unitPrefab.GameObject;
         public string UnitName => _unitPrefab.Name;
-
-        public async void InstantiateUnit()
-        {
-           
-        }
     }
 }

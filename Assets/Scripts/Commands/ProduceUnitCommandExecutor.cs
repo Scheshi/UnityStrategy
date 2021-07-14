@@ -1,14 +1,17 @@
+using System;
 using System.Threading.Tasks;
 using Abstractions;
 using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
+using Utils;
+using Zenject;
 using Object = UnityEngine.Object;
 
 
 namespace Commands
 {
-    public class ProduceUnitCommandExecutor : CommandExecutorBase<ICreateUnitCommand>, IUnitProducer
+    public class ProduceUnitCommandExecutor : CommandExecutorBase<ICreateUnitCommand>, IUnitProducer, ITick
     {
         private ReactiveCollection<IProductionTask> _queue = new ReactiveCollection<IProductionTask>();
         private int _millisecondsPerRefresh = 100;
@@ -17,9 +20,10 @@ namespace Commands
         public ProduceUnitCommandExecutor(Vector3 spawnPosition)
         {
             SpawnPosition = spawnPosition;
+            Observable.EveryUpdate().Subscribe(_ => Tick());
         }
         
-        public async void Update()
+        public void Tick()
         {
             if (_queue.Count == 0)
             {
@@ -27,18 +31,13 @@ namespace Commands
             }
 
             var innerTask = (UnitProductionTask)_queue[0];
-            while (innerTask.TimeProduce  > 0)
+            innerTask.TimeProduce -= Time.deltaTime;
+            if (innerTask.TimeProduce <= 0)
             {
-                if (Time.timeScale > 0)
-                {
-                    innerTask.TimeProduce -= _millisecondsPerRefresh;
-                }
-                await Task.Delay(_millisecondsPerRefresh);
-            }
-
-            var unit = Object.Instantiate(innerTask.UnitObject, SpawnPosition, Quaternion.identity);
+                var unit = Object.Instantiate(innerTask.UnitObject, SpawnPosition, Quaternion.identity);
                 unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit.GetComponent<NavMeshAgent>()), new AttackCommandExecutor(unit.transform), new PatrolCommandExecutor(unit.GetComponent<NavMeshAgent>()));
-            RemoveTaskAtIndex(0);
+                RemoveTaskAtIndex(0);
+            }
         }
 
         public void Cancel(int index) => RemoveTaskAtIndex(index);
