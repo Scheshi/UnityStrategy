@@ -15,7 +15,10 @@ namespace Abstractions
     public interface ICreateUnitCommand : ICommand
     {
         Vector3 SpawnPosition { get; set; }
-        void InstantiateUnit();
+        float ProductionTime { get; }
+        Sprite Icon { get; }
+        GameObject UnitPrefab { get;}
+        string UnitName { get; }
     }
 
     public interface IAttackCommand : ICommand
