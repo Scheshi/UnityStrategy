@@ -1,6 +1,7 @@
 using System;
 using Abstractions;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace Commands
@@ -14,7 +15,16 @@ namespace Commands
 
         private ReactiveCollection<ICommand> _innerCollection = new ReactiveCollection<ICommand>();
 
-        [Inject]
+        public UnitCommandQueue(CommandExecutorBase<IMoveCommand> moveCommandExecutor,
+            CommandExecutorBase<IPatrolCommand> patrolCommandExecutor,
+            CommandExecutorBase<IAttackCommand> attackCommandExecutor)
+        {
+            _moveCommandExecutor = moveCommandExecutor;
+            _patrolCommandExecutor = patrolCommandExecutor;
+            _attackCommandExecutor = attackCommandExecutor;
+            Init();
+        }
+        
         private void Init()
         {
             _innerCollection.ObserveAdd().Subscribe(item => OnNewCommand(item.Value, item.Index));
@@ -30,6 +40,7 @@ namespace Commands
 
         private async void ExecuteCommand(ICommand command)
         {
+            Debug.Log(nameof(ExecuteCommand));
             await _moveCommandExecutor.TryExecute(command);
             await _patrolCommandExecutor.TryExecute(command);
             await _attackCommandExecutor.TryExecute(command);

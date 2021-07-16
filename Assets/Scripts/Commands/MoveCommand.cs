@@ -35,29 +35,19 @@ namespace Commands
             _cancellationToken = new CancellationTokenSource();
             try
             {
-                while (true)
-                {
+                Debug.Log(_to);
                     agent.SetDestination(_to);
-                    await new MoveAwatable(agent, _to, null).WithCancellation(_cancellationToken.Token);
-                }
+                    while (Mathf.Abs(agent.transform.position.x - _to.x) < 0.1f &&
+                           Mathf.Abs(agent.transform.position.z - _to.z) < 0.1f)
+                    {
+                        await Task.Yield();
+                    }
             }
             catch(Exception e)
             {
                 agent.SetDestination(agent.transform.position);
-                //Debug.Log(e);
+                Debug.Log(e);
             }
-        }
-
-        private async Task<int> MoveTo(NavMeshAgent agent, Vector3 to)
-        {
-            agent.SetDestination(to);
-            while (Mathf.Abs(agent.transform.position.x - _to.x) < 0.1f &&
-                   Mathf.Abs(agent.transform.position.z - _to.z) < 0.1f)
-            {
-                await Task.Yield();
-            }
-
-            return 1;
         }
     }
 }

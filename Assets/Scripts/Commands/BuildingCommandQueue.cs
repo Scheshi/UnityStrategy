@@ -55,7 +55,6 @@ namespace Commands
 
         public void EnqueueCommand(ICommand wrappedCommand)
         {
-            Debug.Log(typeof(ICommand));
             _innerCollection.Add(wrappedCommand);
         }
 

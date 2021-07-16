@@ -35,7 +35,6 @@ namespace UI.Model
 
         public void OnClick(ICommandExecutor executor, ICommandQueue queue)
         {
-            OnCancelCommands();
             CreateCommand(executor, queue);
         }
 

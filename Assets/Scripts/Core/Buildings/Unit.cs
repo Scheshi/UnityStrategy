@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Abstractions;
 using Commands;
 using UnityEngine;
@@ -40,9 +41,13 @@ namespace Core.Buildings
         public void SetExecutors(params ICommandExecutor[] executors)
         {
             Executors = executors;
+            ICommandExecutor moveExecutor = executors.FirstOrDefault(x => x.CommandType == typeof(IMoveCommand));
+            ICommandExecutor attackExecutor = executors.FirstOrDefault(x => x.CommandType == typeof(IAttackCommand));
+            ICommandExecutor patrolExecutor = executors.FirstOrDefault(x => x.CommandType == typeof(IPatrolCommand));
+            CommandQueue = new UnitCommandQueue(moveExecutor as CommandExecutorBase<IMoveCommand>, patrolExecutor as CommandExecutorBase<IPatrolCommand>, attackExecutor as CommandExecutorBase<IAttackCommand>);
         }
 
-        public ICommandQueue CommandQueue { get; } = new UnitCommandQueue();
+        public ICommandQueue CommandQueue { get; private set; }
         public GameObject GameObject => gameObject;
     }
 }

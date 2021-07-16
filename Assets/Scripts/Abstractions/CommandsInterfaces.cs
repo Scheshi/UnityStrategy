@@ -53,7 +53,14 @@ namespace Abstractions
     {
         public Type CommandType => typeof(T);
 
-        public async Task TryExecute(ICommand command) => await ExecuteTypeCommand((T) command);
+        public async Task TryExecute(ICommand command)
+        {
+            if (command is T currentCommand)
+            {
+                Debug.Log(typeof(T));
+                await ExecuteTypeCommand(currentCommand);
+            }
+        }
 
         protected abstract Task ExecuteTypeCommand(T command);
     }
