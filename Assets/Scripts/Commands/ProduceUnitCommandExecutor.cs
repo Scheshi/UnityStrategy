@@ -1,11 +1,9 @@
-using System;
 using System.Threading.Tasks;
 using Abstractions;
 using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
 using Utils;
-using Zenject;
 using Object = UnityEngine.Object;
 
 
@@ -52,7 +50,13 @@ namespace Commands
         }
 
         
-        protected override void ExecuteTypeCommand(ICreateUnitCommand command)
+        protected override Task ExecuteTypeCommand(ICreateUnitCommand command)
+        {
+            Enqueue(command);
+            return Task.Run(() => { });
+        }
+
+        private void Enqueue(ICreateUnitCommand command)
         {
             _queue.Add(new UnitProductionTask(command.ProductionTime, command.Icon, command.UnitPrefab, command.UnitName));
         }

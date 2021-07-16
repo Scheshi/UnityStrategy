@@ -33,20 +33,24 @@ namespace UI.Model
             _patrolCommandCreator.Cancel();
         }
 
-        public void OnClick(ICommandExecutor executor)
+        public void OnClick(ICommandExecutor executor, ICommandQueue queue)
         {
             OnCancelCommands();
-            CreateCommand(executor);
+            CreateCommand(executor, queue);
         }
 
-        public void CreateCommand(ICommandExecutor executor, bool isComplete = false)
+        public void CreateCommand(ICommandExecutor executor, ICommandQueue queue, bool isComplete = false)
         {
+            if (!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.RightShift) || isComplete)
+            {
+                queue.Clear();
+            }
             _cancellation.SetValue(false);
-            _unitProduceCommandCreator.Create(executor, executor.Execute, isComplete);
-            _attackCommandCreator.Create(executor, executor.Execute, isComplete);
-            _cancelCommandCreator.Create(executor, executor.Execute, isComplete);
-            _moveCommandCreator.Create(executor, executor.Execute, isComplete);
-            _patrolCommandCreator.Create(executor, executor.Execute, isComplete);
+            _unitProduceCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
+            _attackCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
+            _cancelCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
+            _moveCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
+            _patrolCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _isPending = true;
         }
     }

@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Abstractions;
+using Commands;
 using UnityEngine;
+
 
 namespace Core.Buildings
 {
@@ -9,6 +12,7 @@ namespace Core.Buildings
         [SerializeField] private string itemName;
         [SerializeField] private int maxHealth;
         [SerializeField] private Sprite icon;
+        private List<ICommand> _commandQueue;
         private int _currentHealth;
         public ICommandExecutor[] Executors { get; private set; }
         public Transform Transform => transform;
@@ -22,7 +26,7 @@ namespace Core.Buildings
         }
 
         public Sprite Icon => icon;
-        
+
         public void Select()
         {
             //
@@ -38,6 +42,7 @@ namespace Core.Buildings
             Executors = executors;
         }
 
+        public ICommandQueue CommandQueue { get; } = new UnitCommandQueue();
         public GameObject GameObject => gameObject;
     }
 }

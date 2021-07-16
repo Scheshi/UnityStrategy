@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -44,16 +45,16 @@ namespace Abstractions
     public interface ICommandExecutor
     {
         public Type CommandType { get; }
-        void Execute(ICommand command);
+        Task TryExecute(ICommand command);
     }
     
 
-    public abstract class CommandExecutorBase<T> : ICommandExecutor where T: ICommand
+    public abstract class CommandExecutorBase<T> : ICommandExecutor<T> where T: ICommand
     {
         public Type CommandType => typeof(T);
 
-        public void Execute(ICommand command) => ExecuteTypeCommand((T) command);
+        public async Task TryExecute(ICommand command) => await ExecuteTypeCommand((T) command);
 
-        protected abstract void ExecuteTypeCommand(T command);
+        protected abstract Task ExecuteTypeCommand(T command);
     }
 }

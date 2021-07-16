@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Abstractions;
+using Commands;
 using UnityEngine;
+using Zenject;
 
 
 namespace Core.Buildings
@@ -22,6 +25,7 @@ namespace Core.Buildings
         private int _currentHealth;
 
         public ICommandExecutor[] Executors { get; private set; }
+        public ICommandQueue CommandQueue { get; private set; }
         public Transform Transform => transform;
         public event Action OnSelect = () => { };
         public string Name => itemName;
@@ -30,6 +34,12 @@ namespace Core.Buildings
         public void Damage(int point)
         {
             _currentHealth -= point;
+        }
+
+        [Inject]
+        private void Inject()
+        {
+            
         }
 
         public Sprite Icon => icon;
@@ -72,6 +82,11 @@ namespace Core.Buildings
         public void SetExecutors(params ICommandExecutor[] executors)
         {
             Executors = executors;
+            ICommandExecutor executor = executors.FirstOrDefault(x => x.CommandType == typeof(ICreateUnitCommand));
+            if (executor != null)
+            {
+                CommandQueue = new BuildingCommandQueue(executor as CommandExecutorBase<ICreateUnitCommand>);
+            }
         }
     }
 }

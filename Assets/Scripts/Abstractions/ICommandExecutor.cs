@@ -1,6 +1,6 @@
 namespace Abstractions
 {
-    public class ICommandExecutor
+    public interface ICommandExecutor<T>: ICommandExecutor where T: ICommand
     {
         
     }

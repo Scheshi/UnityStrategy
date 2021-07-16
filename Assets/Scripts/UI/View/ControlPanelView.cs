@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class ControlPanelView : MonoBehaviour
 {
-    public event Action<ICommandExecutor> OnClick = (executor => { }); 
+    public event Action<ICommandExecutor, ICommandQueue> OnClick = (executor, queue) => { }; 
     
     [SerializeField] private Button attackButton;
     [SerializeField] private Button moveButton;
@@ -59,7 +59,7 @@ public class ControlPanelView : MonoBehaviour
         }
     }
 
-    public void SetButtons(params ICommandExecutor[] executors)
+    public void SetButtons(ICommandQueue commandQueue, params ICommandExecutor[] executors)
     {
         if (executors != null && executors.Length > 0)
         {
@@ -70,7 +70,7 @@ public class ControlPanelView : MonoBehaviour
                 {
                     button.gameObject.SetActive(true);
                     var i1 = i;
-                    button.onClick.AddListener(() => OnClick.Invoke(executors[i1]));
+                    button.onClick.AddListener(() => OnClick.Invoke(executors[i1], commandQueue));
                 }
             }
         }

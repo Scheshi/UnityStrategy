@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abstractions;
 using UnityEngine.AI;
 
@@ -14,10 +15,13 @@ namespace Commands
             _ownerTransform = ownerTransform;
         }
         
-        protected override void ExecuteTypeCommand(IPatrolCommand command)
+        protected override Task ExecuteTypeCommand(IPatrolCommand command)
         {
-            command.SetStartPosition(_ownerTransform.transform.position);
-            command.Patrol(_ownerTransform);
+            return Task.Run(() =>
+            {
+                command.SetStartPosition(_ownerTransform.transform.position);
+                command.Patrol(_ownerTransform);
+            });
         }
     }
 }
