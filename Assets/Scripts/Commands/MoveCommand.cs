@@ -30,24 +30,27 @@ namespace Commands
             }
         }
 
-        public async void Move(NavMeshAgent agent)
+        public Task Move(NavMeshAgent agent)
         {
-            _cancellationToken = new CancellationTokenSource();
-            try
+            return Task.Run(async () =>
             {
-                Debug.Log(_to);
+                _cancellationToken = new CancellationTokenSource();
+                try
+                {
                     agent.SetDestination(_to);
                     while (Mathf.Abs(agent.transform.position.x - _to.x) < 0.1f &&
                            Mathf.Abs(agent.transform.position.z - _to.z) < 0.1f)
                     {
                         await Task.Yield();
                     }
-            }
-            catch(Exception e)
-            {
-                agent.SetDestination(agent.transform.position);
-                Debug.Log(e);
-            }
+                }
+                catch(Exception e)
+                {
+                    agent.SetDestination(agent.transform.position);
+                    Debug.Log(e);
+                }
+            };
+            
         }
     }
 }
