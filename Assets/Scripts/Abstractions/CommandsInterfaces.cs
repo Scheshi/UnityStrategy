@@ -57,6 +57,7 @@ namespace Abstractions
         {
             if (command is T currentCommand)
             {
+                Debug.Log(typeof(T));
                 await ExecuteTypeCommand(currentCommand);
             }
         }

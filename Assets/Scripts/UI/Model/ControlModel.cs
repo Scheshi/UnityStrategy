@@ -35,6 +35,7 @@ namespace UI.Model
 
         public void OnClick(ICommandExecutor executor, ICommandQueue queue)
         {
+            _isPending = true;
             CreateCommand(executor, queue);
         }
 
@@ -46,6 +47,7 @@ namespace UI.Model
                 queue.Clear();
                 _cancellation.SetValue(false);
             }
+            isComplete &= !_isPending;
             _unitProduceCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _attackCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _cancelCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);

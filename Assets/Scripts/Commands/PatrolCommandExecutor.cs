@@ -19,7 +19,7 @@ namespace Commands
         {
             command.SetStartPosition(_ownerTransform.transform.position); 
             Task task = new Task(() => command.Patrol(_ownerTransform));
-            task.RunSynchronously();
+            task.Start(TaskScheduler.FromCurrentSynchronizationContext());
             await task;
         }
     }

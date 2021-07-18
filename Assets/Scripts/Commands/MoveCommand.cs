@@ -36,8 +36,7 @@ namespace Commands
             Task task = new Task(async () =>
             {
                 agent.SetDestination(_to);
-                while (Mathf.Abs(agent.transform.position.x - _to.x) < 0.1f &&
-                       Mathf.Abs(agent.transform.position.z - _to.z) < 0.1f)
+                while (!(agent.transform.position == _to))
                 {
                     await Task.Yield();
                 }
