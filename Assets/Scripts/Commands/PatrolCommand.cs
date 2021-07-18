@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Abstractions;
@@ -47,7 +48,11 @@ namespace Commands
                 while (true)
                 {
                     agent.SetDestination(_endPoint);
-                    await new MoveAwatable(agent, _endPoint, null).WithCancellation(_cancellationToken.Token);
+                    while (Mathf.Abs(agent.transform.position.x - _startPoint.x) < 0.1f &&
+                           Mathf.Abs(agent.transform.position.z - _startPoint.z) < 0.1f)
+                    {
+                        await Task.Yield();
+                    }
                     (_startPoint, _endPoint) = (_endPoint, _startPoint);
                 }
             }

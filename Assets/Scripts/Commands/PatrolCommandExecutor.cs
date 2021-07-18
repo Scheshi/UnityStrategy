@@ -15,13 +15,12 @@ namespace Commands
             _ownerTransform = ownerTransform;
         }
         
-        protected override Task ExecuteTypeCommand(IPatrolCommand command)
+        protected override async Task ExecuteTypeCommand(IPatrolCommand command)
         {
-            return Task.Run(() =>
-            {
-                command.SetStartPosition(_ownerTransform.transform.position);
-                command.Patrol(_ownerTransform);
-            });
+            command.SetStartPosition(_ownerTransform.transform.position); 
+            Task task = new Task(() => command.Patrol(_ownerTransform));
+            task.RunSynchronously();
+            await task;
         }
     }
 }

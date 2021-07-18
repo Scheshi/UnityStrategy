@@ -13,9 +13,11 @@ namespace Commands
             _ownerTransform = ownerTransform;
         }
         
-        protected override Task ExecuteTypeCommand(IAttackCommand command)
+        protected override async Task ExecuteTypeCommand(IAttackCommand command)
         {
-            return Task.Run((() => command.Attack(_ownerTransform.position)));
+            Task task = new Task(() => command.Attack(_ownerTransform.position));
+            task.RunSynchronously();
+            await task;
         }
     }
 }

@@ -40,7 +40,6 @@ namespace Commands
 
         private async void ExecuteCommand(ICommand command)
         {
-            Debug.Log(nameof(ExecuteCommand));
             await _moveCommandExecutor.TryExecute(command);
             await _patrolCommandExecutor.TryExecute(command);
             await _attackCommandExecutor.TryExecute(command);
@@ -62,6 +61,7 @@ namespace Commands
         public void EnqueueCommand(ICommand wrappedCommand)
         {
             _innerCollection.Add(wrappedCommand);
+            Debug.Log(_innerCollection.IndexOf(wrappedCommand));
         }
 
         public void Clear()

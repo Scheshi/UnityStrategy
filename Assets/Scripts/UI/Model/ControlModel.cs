@@ -42,9 +42,10 @@ namespace UI.Model
         {
             if (!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.RightShift) || isComplete)
             {
+                Debug.Log(Input.GetKey(KeyCode.LeftShift));
                 queue.Clear();
+                _cancellation.SetValue(false);
             }
-            _cancellation.SetValue(false);
             _unitProduceCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _attackCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _cancelCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
