@@ -30,10 +30,10 @@ namespace Commands
             }
         }
 
-        public async void Move(NavMeshAgent agent)
+        public async Task Move(NavMeshAgent agent)
         {
             _cancellationToken = new CancellationTokenSource();
-            try
+            Task task = new Task(async () =>
             {
                 agent.SetDestination(_to);
                 while (Mathf.Abs(agent.transform.position.x - _to.x) < 0.1f &&
@@ -41,6 +41,11 @@ namespace Commands
                 {
                     await Task.Yield();
                 }
+            });
+            try
+            { 
+                task.Start(TaskScheduler.FromCurrentSynchronizationContext());
+                await task;
             }
             catch (Exception e)
             {

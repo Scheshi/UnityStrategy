@@ -30,7 +30,7 @@ namespace Abstractions
 
     public interface IMoveCommand : ICommand
     {
-        void Move(NavMeshAgent agent);
+        Task Move(NavMeshAgent agent);
     }
 
     public interface IPatrolCommand : ICommand
