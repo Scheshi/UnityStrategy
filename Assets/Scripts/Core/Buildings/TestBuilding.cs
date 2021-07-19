@@ -27,6 +27,7 @@ namespace Core.Buildings
         public ICommandExecutor[] Executors { get; private set; }
         public ICommandQueue CommandQueue { get; private set; }
         public Transform Transform => transform;
+        public Vector3 UnitSpawnPosition { get; set; }
         public event Action OnSelect = () => { };
         public string Name => itemName;
         public int CurrentHealth => _currentHealth;
@@ -46,6 +47,7 @@ namespace Core.Buildings
 
         private void Start()
         {
+            UnitSpawnPosition = transform.position;
             var meshes = GetComponentsInChildren<MeshRenderer>();
             var meshList = new List<Meshes>();
             
@@ -83,10 +85,13 @@ namespace Core.Buildings
         {
             Executors = executors;
             ICommandExecutor executor = executors.FirstOrDefault(x => x.CommandType == typeof(ICreateUnitCommand));
+            ICommandExecutor spawnExecutor = executors.First(x => x.CommandType == typeof(ISpawnPointCommand));
             if (executor != null)
             {
-                CommandQueue = new BuildingCommandQueue(executor as CommandExecutorBase<ICreateUnitCommand>);
+                CommandQueue = new BuildingCommandQueue(executor as CommandExecutorBase<ICreateUnitCommand>, spawnExecutor as CommandExecutorBase<ISpawnPointCommand>);
             }
         }
+
+        
     }
 }

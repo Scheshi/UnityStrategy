@@ -35,7 +35,7 @@ namespace Abstractions
 
     public interface IBuilding : ISelectableItem
     {
-        
+        Vector3 UnitSpawnPosition { get; set; }
     }
 
     public interface IUnit : ISelectableItem

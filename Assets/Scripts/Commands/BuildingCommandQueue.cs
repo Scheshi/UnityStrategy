@@ -8,14 +8,17 @@ namespace Commands
 {
     public class BuildingCommandQueue: IDisposable, ICommandQueue
     {
-        CommandExecutorBase<ICreateUnitCommand> _produceCommandExecutor;
+        private CommandExecutorBase<ICreateUnitCommand> _produceCommandExecutor;
+        private CommandExecutorBase<ISpawnPointCommand> _unitSpawnPointExecutor;
 
 
         private ReactiveCollection<ICommand> _innerCollection = new ReactiveCollection<ICommand>();
 
-        public BuildingCommandQueue(CommandExecutorBase<ICreateUnitCommand> unitProducer)
+        public BuildingCommandQueue(CommandExecutorBase<ICreateUnitCommand> unitProducer,
+            CommandExecutorBase<ISpawnPointCommand> commandExecutorBase)
         {
             _produceCommandExecutor = unitProducer;
+            _unitSpawnPointExecutor = commandExecutorBase;
             Init();
         }
         
