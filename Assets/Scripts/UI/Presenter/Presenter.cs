@@ -19,6 +19,7 @@ namespace UI.Presenter
         private ControlModel _model;
         private ProduceModel _produceModel;
         private ICommandQueue _currentQueue;
+        private bool _isPending;
 
 
         public Presenter(ControlPanelView control, InfoPanelView info, ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> attackModel, ControlModel model, ProduceModel produceModel)
@@ -30,7 +31,7 @@ namespace UI.Presenter
             _control = control;
             _info.Reset();
             _model = model;
-            _control.OnClick += _model.OnClick;
+            _control.OnClick += OnClick;
             _control.OnCancel += _model.OnCancelCommands;
             _position = position;
             _attackable = attackModel;
@@ -39,14 +40,38 @@ namespace UI.Presenter
             _attackable.OnChangeValue += OnChangeTarget;
         }
 
+        private void OnClick(ICommandExecutor arg1, ICommandQueue arg2)
+        {
+            _model.OnClick(arg1, arg2);
+            _isPending = true;
+        }
+
         private void OnChangePosition()
         {
-            _model.CreateCommand(_selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(IMoveCommand)), _currentQueue, true);
+            if (!_isPending)
+            {
+                _model.CreateCommand(
+                    _selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(IMoveCommand)),
+                    _currentQueue, true);
+            }
+            else
+            {
+                _isPending = false;
+            }
         }
 
         private void OnChangeTarget()
         {
-            _model.CreateCommand(_selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(IAttackCommand)), _currentQueue, true);
+            if (!_isPending)
+            {
+                _model.CreateCommand(
+                    _selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(IAttackCommand)),
+                    _currentQueue, true);
+            }
+            else
+            {
+                _isPending = false;
+            }
         }
 
 

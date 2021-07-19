@@ -47,6 +47,7 @@ namespace UI.Model
                 queue.Clear();
                 OnCancelCommands();
             }
+
             _unitProduceCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _attackCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _cancelCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);

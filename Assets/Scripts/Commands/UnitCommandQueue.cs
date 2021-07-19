@@ -51,7 +51,6 @@ namespace Commands
                 if (_innerCollection.Count > 0)
                 {
                     _innerCollection.RemoveAt(0);
-                    Debug.Log("Removing 0");
                 }
 
                 _isPending = false;
@@ -69,7 +68,6 @@ namespace Commands
 
         public void EnqueueCommand(ICommand wrappedCommand)
         {
-            Debug.Log(nameof(EnqueueCommand));
             _innerCollection.Add(wrappedCommand);
         }
 
