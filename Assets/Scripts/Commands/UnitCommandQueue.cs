@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Abstractions;
 using UniRx;
 using UnityEngine;
@@ -30,31 +31,33 @@ namespace Commands
             _innerCollection.ObserveAdd().Subscribe(item => OnNewCommand(item.Value, item.Index));
         }
 
-        private void OnNewCommand(ICommand command, int index)
+        private async void OnNewCommand(ICommand command, int index)
         {
             if (index == 0)
             {
-                ExecuteCommand(command);
+                await ExecuteCommand(command);
             }
         }
 
-        private async void ExecuteCommand(ICommand command)
+        private async Task ExecuteCommand(ICommand command)
         {
             await _moveCommandExecutor.TryExecute(command);
             await _patrolCommandExecutor.TryExecute(command);
             await _attackCommandExecutor.TryExecute(command);
+            Debug.Log(nameof(ExecuteCommand));
             if (_innerCollection.Count > 0)
             {
                 _innerCollection.RemoveAt(0);
+                Debug.Log("Removing 0");
             }
             CheckTheQueue();
         }
 
-        private void CheckTheQueue()
+        private async void CheckTheQueue()
         {
             if (_innerCollection.Count > 0)
             {
-                ExecuteCommand(_innerCollection[0]);
+                await ExecuteCommand(_innerCollection[0]);
             }
         }
 

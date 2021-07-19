@@ -40,7 +40,6 @@ namespace Abstractions
                 try
                 {
                     var result = await _awaitable.AsTask().WithCancellation(_tokenSource.Token);
-                    Debug.Log(result);
                     onCallBack?.Invoke(GetCommand(result));
                 }
                 catch (OperationCanceledException)

@@ -8,6 +8,11 @@ namespace Utils
     {
         public static bool Has<T>(this IEnumerable<T> array, out T data, Func<T, bool> func)
         {
+            if (array == null || func == null)
+            {
+                data = default;
+                return false;
+            }
             data = array.FirstOrDefault(func);
             return data != null;
         }

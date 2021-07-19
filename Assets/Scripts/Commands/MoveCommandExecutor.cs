@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Abstractions;
-using UnityEngine;
 using UnityEngine.AI;
 
 
@@ -17,10 +16,7 @@ namespace Commands
         
         protected override async Task ExecuteTypeCommand(IMoveCommand command)
         {
-            Task task = new Task(() => command.Move(_gameObjectMoving));
-            task.Start(TaskScheduler.FromCurrentSynchronizationContext());
-            await task;
-            Debug.Log(nameof(ExecuteTypeCommand));
+            await command.Move(_gameObjectMoving);
         }
     }
 }

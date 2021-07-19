@@ -42,32 +42,24 @@ namespace Commands
 
         public async void Patrol(NavMeshAgent agent)
         {
-            Debug.Log("Start");
             _cancellationToken = new CancellationTokenSource();
-            Task task = new Task(async () =>
-            {
-                agent.SetDestination(_endPoint);
-                while (Mathf.Abs(agent.transform.position.x - _endPoint.x) > 0.1f &&
-                       Mathf.Abs(agent.transform.position.z - _endPoint.z) > 0.1f)
-                {
-                    Debug.Log(Mathf.Abs(agent.transform.position.x - _endPoint.x));
-                    await Task.Delay(100);
-                }
-            });
+            agent.SetDestination(_endPoint);
+               
             try
             {
-                task.Start(TaskScheduler.FromCurrentSynchronizationContext());
-                await task;
+                while (Mathf.Abs(agent.transform.position.x - _endPoint.x) > 0.1f &&
+                       Mathf.Abs(agent.transform.position.z - _endPoint.z) > 0.1f)
+                    {
+                        await Task.Yield();
+                    }
+                    (_startPoint, _endPoint) = (_endPoint, _startPoint);
+                    Patrol(agent);
             }
             catch(Exception e)
             {
                 agent.SetDestination(agent.transform.position);
                 Debug.LogErrorFormat(e.Message);
-                return;
             }
-            (_startPoint, _endPoint) = (_endPoint, _startPoint);
-            Debug.Log("End");
-            Patrol(agent);
         }
     }
 
