@@ -35,22 +35,19 @@ namespace Abstractions
         protected override async void CreateCommand(Action<T> onCallBack, bool isComplete = false)
         {
             _tokenSource = new CancellationTokenSource();
-            if (!isComplete)
+            try
             {
-                try
-                {
-                    var result = await _awaitable.AsTask().WithCancellation(_tokenSource.Token);
-                    onCallBack?.Invoke(GetCommand(result));
-                }
-                catch (OperationCanceledException)
-                {
-                    Debug.Log("Command " + nameof(T) + " is cancelled");
-                }
+                var result = await _awaitable.AsTask().WithCancellation(_tokenSource.Token);
+                onCallBack?.Invoke(GetCommand(result));
             }
-            else if(_awaitable is ScriptableModel<TParam> model)
+            catch (OperationCanceledException)
+            {
+                Debug.Log("Command " + nameof(T) + " is cancelled");
+            }
+            /*else if(_awaitable is ScriptableModel<TParam> model)
             {
                  onCallBack?.Invoke(GetCommand(model.CurrentValue));
-            }
+            }*/
         }
 
         public void Cancel()

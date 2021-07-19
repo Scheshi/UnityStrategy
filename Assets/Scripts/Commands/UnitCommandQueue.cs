@@ -1,9 +1,9 @@
 using System;
-using System.Threading.Tasks;
 using Abstractions;
 using UniRx;
 using UnityEngine;
 using Zenject;
+
 
 namespace Commands
 {
@@ -48,7 +48,6 @@ namespace Commands
                 await _moveCommandExecutor.TryExecute(command);
                 await _patrolCommandExecutor.TryExecute(command);
                 await _attackCommandExecutor.TryExecute(command);
-                Debug.Log(nameof(ExecuteCommand));
                 if (_innerCollection.Count > 0)
                 {
                     _innerCollection.RemoveAt(0);
@@ -70,15 +69,15 @@ namespace Commands
 
         public void EnqueueCommand(ICommand wrappedCommand)
         {
+            Debug.Log(nameof(EnqueueCommand));
             _innerCollection.Add(wrappedCommand);
-            Debug.Log(_innerCollection.Count);
         }
 
         public void Clear()
         {
             if (_innerCollection.Count > 0)
             {
-                _innerCollection[0]?.Cancel();
+                _innerCollection[0].Cancel();
             }
 
             _innerCollection.Clear();
