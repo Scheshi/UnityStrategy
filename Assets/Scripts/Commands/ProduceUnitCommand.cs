@@ -22,5 +22,9 @@ namespace Commands
         public Sprite Icon => _unitPrefab.Icon;
         public GameObject UnitPrefab => _unitPrefab.GameObject;
         public string UnitName => _unitPrefab.Name;
+        public void Cancel()
+        {
+            //
+        }
     }
 }

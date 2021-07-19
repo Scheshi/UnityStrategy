@@ -41,13 +41,12 @@ namespace UI.Model
 
         public void CreateCommand(ICommandExecutor executor, ICommandQueue queue, bool isComplete = false)
         {
-            if (!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.RightShift) || isComplete)
+            if (!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.RightShift))
             {
-                Debug.Log(Input.GetKey(KeyCode.LeftShift));
                 queue.Clear();
-                _cancellation.SetValue(false);
+                OnCancelCommands();
             }
-            isComplete &= !_isPending;
+            Debug.Log(executor.GetType());
             _unitProduceCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _attackCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _cancelCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);

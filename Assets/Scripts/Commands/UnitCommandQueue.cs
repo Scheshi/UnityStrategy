@@ -15,6 +15,7 @@ namespace Commands
         
 
         private ReactiveCollection<ICommand> _innerCollection = new ReactiveCollection<ICommand>();
+        private bool _isPending;
 
         public UnitCommandQueue(CommandExecutorBase<IMoveCommand> moveCommandExecutor,
             CommandExecutorBase<IPatrolCommand> patrolCommandExecutor,
@@ -31,44 +32,55 @@ namespace Commands
             _innerCollection.ObserveAdd().Subscribe(item => OnNewCommand(item.Value, item.Index));
         }
 
-        private async void OnNewCommand(ICommand command, int index)
+        private void OnNewCommand(ICommand command, int index)
         {
             if (index == 0)
             {
-                await ExecuteCommand(command);
+                ExecuteCommand(command);
             }
         }
 
-        private async Task ExecuteCommand(ICommand command)
+        private async void ExecuteCommand(ICommand command)
         {
-            await _moveCommandExecutor.TryExecute(command);
-            await _patrolCommandExecutor.TryExecute(command);
-            await _attackCommandExecutor.TryExecute(command);
-            Debug.Log(nameof(ExecuteCommand));
-            if (_innerCollection.Count > 0)
+            if (!_isPending)
             {
-                _innerCollection.RemoveAt(0);
-                Debug.Log("Removing 0");
+                _isPending = true;
+                await _moveCommandExecutor.TryExecute(command);
+                await _patrolCommandExecutor.TryExecute(command);
+                await _attackCommandExecutor.TryExecute(command);
+                Debug.Log(nameof(ExecuteCommand));
+                if (_innerCollection.Count > 0)
+                {
+                    _innerCollection.RemoveAt(0);
+                    Debug.Log("Removing 0");
+                }
+
+                _isPending = false;
+                CheckTheQueue();
             }
-            CheckTheQueue();
         }
 
-        private async void CheckTheQueue()
+        private void CheckTheQueue()
         {
             if (_innerCollection.Count > 0)
             {
-                await ExecuteCommand(_innerCollection[0]);
+                ExecuteCommand(_innerCollection[0]);
             }
         }
 
         public void EnqueueCommand(ICommand wrappedCommand)
         {
             _innerCollection.Add(wrappedCommand);
-            Debug.Log(_innerCollection.IndexOf(wrappedCommand));
+            Debug.Log(_innerCollection.Count);
         }
 
         public void Clear()
         {
+            if (_innerCollection.Count > 0)
+            {
+                _innerCollection[0]?.Cancel();
+            }
+
             _innerCollection.Clear();
         }
 

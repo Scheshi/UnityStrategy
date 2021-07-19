@@ -26,12 +26,9 @@ namespace Commands
             model.OnChangeValue += Cancel;
         }
 
-        private void Cancel()
+        public void Cancel()
         {
-            if (!_cancellation.CurrentValue)
-            {
-                _cancellationToken?.Cancel();
-            }
+            _isCommandPending = false;
         }
 
         public void SetStartPosition(Vector3 startPosition)
@@ -40,7 +37,7 @@ namespace Commands
             _isCommandPending = true;
         }
 
-        public async void Patrol(NavMeshAgent agent)
+        public async Task Patrol(NavMeshAgent agent)
         {
             _cancellationToken = new CancellationTokenSource();
             agent.SetDestination(_endPoint);
@@ -48,12 +45,12 @@ namespace Commands
             try
             {
                 while (Mathf.Abs(agent.transform.position.x - _endPoint.x) > 0.1f &&
-                       Mathf.Abs(agent.transform.position.z - _endPoint.z) > 0.1f)
+                       Mathf.Abs(agent.transform.position.z - _endPoint.z) > 0.1f && _isCommandPending)
                     {
                         await Task.Yield();
                     }
                     (_startPoint, _endPoint) = (_endPoint, _startPoint);
-                    Patrol(agent);
+                    await Patrol(agent);
             }
             catch(Exception e)
             {

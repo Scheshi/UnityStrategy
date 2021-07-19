@@ -18,9 +18,7 @@ namespace Commands
         protected override async Task ExecuteTypeCommand(IPatrolCommand command)
         {
             command.SetStartPosition(_ownerTransform.transform.position); 
-            Task task = new Task(() => command.Patrol(_ownerTransform));
-            task.Start(TaskScheduler.FromCurrentSynchronizationContext());
-            await task;
+            await command.Patrol(_ownerTransform);
         }
     }
 }

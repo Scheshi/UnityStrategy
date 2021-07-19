@@ -49,7 +49,7 @@ namespace Abstractions
             }
             else if(_awaitable is ScriptableModel<TParam> model)
             {
-                onCallBack?.Invoke(GetCommand(model.CurrentValue));
+                 onCallBack?.Invoke(GetCommand(model.CurrentValue));
             }
         }
 

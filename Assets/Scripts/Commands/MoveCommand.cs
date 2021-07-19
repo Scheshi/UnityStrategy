@@ -14,20 +14,19 @@ namespace Commands
         private Vector3 _to;
         private CancellationTokenSource _cancellationToken;
         private CancellationModel _cancellation;
+        private bool _isPending;
 
         public MoveCommand(Vector3 to, CancellationModel cancellationModel)
         {
             _to = to;
             _cancellation = cancellationModel;
             _cancellation.OnChangeValue += Cancel;
+            _isPending = true;
         }
 
-        private void Cancel()
+        public void Cancel()
         {
-            if (!_cancellation.CurrentValue)
-            {
-                _cancellationToken?.Cancel();
-            }
+            _isPending = false;
         }
 
         public async Task Move(NavMeshAgent agent)
@@ -37,7 +36,7 @@ namespace Commands
             {
                 agent.SetDestination(_to);
                 while (Mathf.Abs(agent.transform.position.x - _to.x) > 0.1f &&
-                       Mathf.Abs(agent.transform.position.z - _to.z) > 0.1f)
+                       Mathf.Abs(agent.transform.position.z - _to.z) > 0.1f && _isPending)
                 {
                     await Task.Yield();
                 }

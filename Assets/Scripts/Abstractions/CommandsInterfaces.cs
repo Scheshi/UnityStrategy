@@ -1,12 +1,14 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Abstractions
 {
-    public interface ICommand{}
+    public interface ICommand
+    {
+        void Cancel();
+    }
 
     public interface IBuildingCommand: ICommand
     {
@@ -37,7 +39,7 @@ namespace Abstractions
     {
         void SetStartPosition(Vector3 startPosition);
         
-        void Patrol(NavMeshAgent movingTransform);
+        Task Patrol(NavMeshAgent movingTransform);
     }
 
 

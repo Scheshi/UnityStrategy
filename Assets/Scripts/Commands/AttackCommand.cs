@@ -23,5 +23,10 @@ namespace Commands
             Debug.Log("Успешная атака");
             _target.Damage(10);
         }
+
+        public void Cancel()
+        {
+            //
+        }
     }
 }
