@@ -1,18 +1,19 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Abstractions;
 using UnityEngine;
 
 namespace Utils
 {
     [CreateAssetMenu(menuName = "Injections/Asset Collection")]
-    public class AssetCollection: ScriptableObject
+    public class UnitCollection: ScriptableObject
     {
         [SerializeField] private GameObject[] assets;
 
-        private GameObject FindObject(string assetName)
+        private IUnit FindObject(string assetName)
         {
-            return assets.FirstOrDefault(x => x.name == assetName);
+            return assets.FirstOrDefault(x => x.name == assetName).GetComponent<IUnit>();
         }
 
         public T InjectAsset<T>(T obj)

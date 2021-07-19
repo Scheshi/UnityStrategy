@@ -2,7 +2,6 @@ using System;
 using Abstractions;
 using UniRx;
 using UnityEngine;
-using Zenject;
 
 
 namespace Input

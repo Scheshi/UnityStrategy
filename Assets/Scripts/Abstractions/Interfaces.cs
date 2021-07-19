@@ -22,6 +22,7 @@ namespace Abstractions
     public interface ISelectableItem: IAttackable
     {
         ICommandExecutor[] Executors { get; }
+        ICommandQueue CommandQueue { get; }
         Transform Transform { get; }
         event Action OnSelect;
         string Name { get; }
@@ -34,11 +35,12 @@ namespace Abstractions
 
     public interface IBuilding : ISelectableItem
     {
-        
+        Vector3 UnitSpawnPosition { get; set; }
     }
 
     public interface IUnit : ISelectableItem
     {
         
+        GameObject GameObject { get; }
     }
 }

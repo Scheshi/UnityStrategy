@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abstractions;
+using Commands;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,13 +10,14 @@ using UnityEngine.UI;
 
 public class ControlPanelView : MonoBehaviour
 {
-    public event Action<ICommandExecutor> OnClick = (executor => { }); 
+    public event Action<ICommandExecutor, ICommandQueue> OnClick = (executor, queue) => { }; 
     
     [SerializeField] private Button attackButton;
     [SerializeField] private Button moveButton;
     [SerializeField] private Button cancelButton;
     [SerializeField] private Button unitProduceButton;
     [SerializeField] private Button patrolButton;
+    [SerializeField] private Button unitSpawnPointButton;
 
     public IObservable<Unit> AttackClickObservable => attackButton.onClick.AsObservable();
     public IObservable<Unit> MoveClickObservable => moveButton.OnClickAsObservable();
@@ -45,6 +47,10 @@ public class ControlPanelView : MonoBehaviour
             {
                 typeof(CommandExecutorBase<IPatrolCommand>),
                 patrolButton
+            },
+            {
+                typeof(CommandExecutorBase<ISpawnPointCommand>),
+                unitSpawnPointButton
             }
         };
         ClearButtons();
@@ -59,7 +65,7 @@ public class ControlPanelView : MonoBehaviour
         }
     }
 
-    public void SetButtons(params ICommandExecutor[] executors)
+    public void SetButtons(ICommandQueue commandQueue, params ICommandExecutor[] executors)
     {
         if (executors != null && executors.Length > 0)
         {
@@ -70,7 +76,7 @@ public class ControlPanelView : MonoBehaviour
                 {
                     button.gameObject.SetActive(true);
                     var i1 = i;
-                    button.onClick.AddListener(() => OnClick.Invoke(executors[i1]));
+                    button.onClick.AddListener(() => OnClick.Invoke(executors[i1], commandQueue));
                 }
             }
         }

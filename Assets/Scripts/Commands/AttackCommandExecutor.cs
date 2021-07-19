@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abstractions;
 using UnityEngine;
 
@@ -12,9 +13,11 @@ namespace Commands
             _ownerTransform = ownerTransform;
         }
         
-        protected override void ExecuteTypeCommand(IAttackCommand command)
+        protected override async Task ExecuteTypeCommand(IAttackCommand command)
         {
-            command.Attack(_ownerTransform.position);
+            Task task = new Task(() => command.Attack(_ownerTransform.position));
+            task.RunSynchronously();
+            await task;
         }
     }
 }

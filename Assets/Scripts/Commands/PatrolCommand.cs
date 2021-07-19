@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Abstractions;
@@ -25,12 +26,9 @@ namespace Commands
             model.OnChangeValue += Cancel;
         }
 
-        private void Cancel()
+        public void Cancel()
         {
-            if (!_cancellation.CurrentValue)
-            {
-                _cancellationToken?.Cancel();
-            }
+            _isCommandPending = false;
         }
 
         public void SetStartPosition(Vector3 startPosition)
@@ -39,22 +37,25 @@ namespace Commands
             _isCommandPending = true;
         }
 
-        public async void Patrol(NavMeshAgent agent)
+        public async Task Patrol(NavMeshAgent agent)
         {
             _cancellationToken = new CancellationTokenSource();
+            agent.SetDestination(_endPoint);
+               
             try
             {
-                while (true)
-                {
-                    agent.SetDestination(_endPoint);
-                    await new MoveAwatable(agent, _endPoint, null).WithCancellation(_cancellationToken.Token);
+                while (Mathf.Abs(agent.transform.position.x - _endPoint.x) > 0.1f &&
+                       Mathf.Abs(agent.transform.position.z - _endPoint.z) > 0.1f && _isCommandPending)
+                    {
+                        await Task.Yield();
+                    }
                     (_startPoint, _endPoint) = (_endPoint, _startPoint);
-                }
+                    await Patrol(agent);
             }
             catch(Exception e)
             {
                 agent.SetDestination(agent.transform.position);
-                Debug.Log(e);
+                Debug.LogErrorFormat(e.Message);
             }
         }
     }

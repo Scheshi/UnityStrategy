@@ -1,11 +1,14 @@
 using System;
-using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Abstractions
 {
-    public interface ICommand{}
+    public interface ICommand
+    {
+        void Cancel();
+    }
 
     public interface IBuildingCommand: ICommand
     {
@@ -15,7 +18,10 @@ namespace Abstractions
     public interface ICreateUnitCommand : ICommand
     {
         Vector3 SpawnPosition { get; set; }
-        void InstantiateUnit();
+        float ProductionTime { get; }
+        Sprite Icon { get; }
+        GameObject UnitPrefab { get;}
+        string UnitName { get; }
     }
 
     public interface IAttackCommand : ICommand
@@ -26,14 +32,14 @@ namespace Abstractions
 
     public interface IMoveCommand : ICommand
     {
-        void Move(NavMeshAgent agent);
+        Task Move(NavMeshAgent agent);
     }
 
     public interface IPatrolCommand : ICommand
     {
         void SetStartPosition(Vector3 startPosition);
         
-        void Patrol(NavMeshAgent movingTransform);
+        Task Patrol(NavMeshAgent movingTransform);
     }
 
 
@@ -41,16 +47,22 @@ namespace Abstractions
     public interface ICommandExecutor
     {
         public Type CommandType { get; }
-        void Execute(ICommand command);
+        Task TryExecute(ICommand command);
     }
     
 
-    public abstract class CommandExecutorBase<T> : ICommandExecutor where T: ICommand
+    public abstract class CommandExecutorBase<T> : ICommandExecutor<T> where T: ICommand
     {
         public Type CommandType => typeof(T);
 
-        public void Execute(ICommand command) => ExecuteTypeCommand((T) command);
+        public async Task TryExecute(ICommand command)
+        {
+            if (command is T currentCommand)
+            {
+                await ExecuteTypeCommand(currentCommand);
+            }
+        }
 
-        protected abstract void ExecuteTypeCommand(T command);
+        protected abstract Task ExecuteTypeCommand(T command);
     }
 }

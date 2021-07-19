@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Abstractions;
-using Commands;
 using UI.Model;
 using UI.View;
 using UnityEngine;
@@ -19,8 +18,10 @@ namespace UI.Presenter
         private ControlPanelView _control;
         private ControlModel _model;
         private ProduceModel _produceModel;
+        private ICommandQueue _currentQueue;
+        private bool _isPending;
 
-        
+
         public Presenter(ControlPanelView control, InfoPanelView info, ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> attackModel, ControlModel model, ProduceModel produceModel)
         {
             info.EndProduce();
@@ -30,43 +31,49 @@ namespace UI.Presenter
             _control = control;
             _info.Reset();
             _model = model;
-            _control.OnClick += _model.OnClick;
+            _control.OnClick += OnClick;
             _control.OnCancel += _model.OnCancelCommands;
             _position = position;
             _attackable = attackModel;
             _produceModel = produceModel;
-            _produceModel.OnStartProduce += OnStartProduce;
-            _produceModel.OnEndProduce += OnEndProduce;
-            _produceModel.OnChangeValue += OnChangeProduceValue;
             _position.OnChangeValue += OnChangePosition;
             _attackable.OnChangeValue += OnChangeTarget;
         }
 
+        private void OnClick(ICommandExecutor arg1, ICommandQueue arg2)
+        {
+            _model.OnClick(arg1, arg2);
+            _isPending = true;
+        }
+
         private void OnChangePosition()
         {
-            _model.CreateCommand(_selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(IMoveCommand)), true);
+            if (!_isPending)
+            {
+                _model.CreateCommand(
+                    _selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(IMoveCommand)),
+                    _currentQueue, true);
+            }
+            else
+            {
+                _isPending = false;
+            }
         }
 
         private void OnChangeTarget()
         {
-            _model.CreateCommand(_selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(IAttackCommand)), true);
+            if (!_isPending)
+            {
+                _model.CreateCommand(
+                    _selectable.CurrentValue.Executors.FirstOrDefault(x => x.CommandType == typeof(IAttackCommand)),
+                    _currentQueue, true);
+            }
+            else
+            {
+                _isPending = false;
+            }
         }
 
-        private void OnStartProduce()
-        {
-            _info.StartProduce();
-        }
-
-        private void OnChangeProduceValue()
-        {
-            _info.SetValueProduce(_produceModel.CurrentValue);
-        }
-
-        private void OnEndProduce()
-        {
-            _info.EndProduce();
-        }
-        
 
         private void OnChangeItem()
         {
@@ -74,31 +81,12 @@ namespace UI.Presenter
             {
                 _info.SetInfo(_selectable.CurrentValue.Icon, _selectable.CurrentValue.Name, _selectable.CurrentValue.CurrentHealth, _selectable.CurrentValue.MaxHealth);
                 SetButtons(_selectable.CurrentValue);
-                if (_selectable.CurrentValue.Executors != null && _produceModel.CurrentValue > 0)
-                {
-                    ICommandExecutor executor =
-                        _selectable.CurrentValue.Executors.FirstOrDefault(x =>
-                            x.CommandType == typeof(ICreateUnitCommand));
-                    if (executor != null)
-                    {
-                        _info.StartProduce();
-                        _info.SetValueProduce(_produceModel.CurrentValue);
-                    }
-                    else
-                    {
-                        _info.EndProduce();
-                    }
-                }
-                else
-                {
-                    _info.EndProduce();
-                }
+                _currentQueue = _selectable.CurrentValue.CommandQueue;
             }
             else
             {
                 _info.Reset();
                 _control.ClearButtons();
-                _info.EndProduce();
             }
             _model.OnCancelCommandCreators();
         }
@@ -106,7 +94,7 @@ namespace UI.Presenter
         private void SetButtons(ISelectableItem item)
         {
             _control.ClearButtons();
-            _control.SetButtons(item.Executors);
+            _control.SetButtons(_selectable.CurrentValue.CommandQueue, item.Executors);
         }
 
 
@@ -116,9 +104,6 @@ namespace UI.Presenter
             _selectable.OnChangeValue -= OnChangeItem;
             _attackable.OnChangeValue -= OnChangeTarget;
             _position.OnChangeValue -= OnChangePosition;
-            _produceModel.OnStartProduce -= OnStartProduce;
-            _produceModel.OnEndProduce -= OnEndProduce;
-            _produceModel.OnChangeValue -= OnChangeProduceValue;
             _produceModel = null;
             _control = null;
             _info = null;

@@ -1,4 +1,3 @@
-using System;
 using Abstractions;
 using Commands;
 using Core.Buildings;
@@ -13,6 +12,7 @@ using Zenject;
 
 public class GameStarter : MonoBehaviour
 {
+    [SerializeField] private ProducePanelView producePanelView;
     [SerializeField] private TopPanelView topPanelView;
     [SerializeField] private ControlPanelView control;
     [SerializeField] private InfoPanelView info;
@@ -22,12 +22,14 @@ public class GameStarter : MonoBehaviour
     private BuildingController _startBuildingController;
     private Presenter _presenter;
     private TopPresenter _topPresenter;
+    private ProducePresenter _producePresenter;
 
     [Inject]
     private void InjectDependency(ScriptableModel<ISelectableItem> selectable, ScriptableModel<Vector3> position, ScriptableModel<IAttackable> target, ControlModel model, ProduceModel produceModel)
     {
         _input = new InputController(selectable, position, target);
         _presenter = new Presenter(control, info, selectable, position, target, model, produceModel);
+        _producePresenter = new ProducePresenter(producePanelView, new ProducePanel(selectable));
     }
 
     [Inject]
@@ -40,7 +42,7 @@ public class GameStarter : MonoBehaviour
     {
         _input.Init();
         _startBuildingController = new BuildingController(startBuilding);
-        startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding.transform.position + Vector3.forward * 10));
+        startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding), new SpawnPointExecutor(startBuilding));
     }
 
     private void OnDestroy()

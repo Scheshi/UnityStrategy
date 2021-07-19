@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Abstractions;
 using UnityEngine.AI;
 
@@ -13,9 +14,9 @@ namespace Commands
             _gameObjectMoving = gameObjectMoving;
         }
         
-        protected override void ExecuteTypeCommand(IMoveCommand command)
+        protected override async Task ExecuteTypeCommand(IMoveCommand command)
         {
-            command.Move(_gameObjectMoving);
+            await command.Move(_gameObjectMoving);
         }
     }
 }

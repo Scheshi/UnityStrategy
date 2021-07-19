@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Abstractions;
+using Commands;
 using UnityEngine;
+using Zenject;
 
 
 namespace Core.Buildings
@@ -22,7 +25,9 @@ namespace Core.Buildings
         private int _currentHealth;
 
         public ICommandExecutor[] Executors { get; private set; }
+        public ICommandQueue CommandQueue { get; private set; }
         public Transform Transform => transform;
+        public Vector3 UnitSpawnPosition { get; set; }
         public event Action OnSelect = () => { };
         public string Name => itemName;
         public int CurrentHealth => _currentHealth;
@@ -32,10 +37,17 @@ namespace Core.Buildings
             _currentHealth -= point;
         }
 
+        [Inject]
+        private void Inject()
+        {
+            
+        }
+
         public Sprite Icon => icon;
 
         private void Start()
         {
+            UnitSpawnPosition = transform.position;
             var meshes = GetComponentsInChildren<MeshRenderer>();
             var meshList = new List<Meshes>();
             
@@ -72,6 +84,14 @@ namespace Core.Buildings
         public void SetExecutors(params ICommandExecutor[] executors)
         {
             Executors = executors;
+            ICommandExecutor executor = executors.FirstOrDefault(x => x.CommandType == typeof(ICreateUnitCommand));
+            ICommandExecutor spawnExecutor = executors.First(x => x.CommandType == typeof(ISpawnPointCommand));
+            if (executor != null)
+            {
+                CommandQueue = new BuildingCommandQueue(executor as CommandExecutorBase<ICreateUnitCommand>, spawnExecutor as CommandExecutorBase<ISpawnPointCommand>);
+            }
         }
+
+        
     }
 }
