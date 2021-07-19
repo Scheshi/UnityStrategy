@@ -13,11 +13,11 @@ namespace Commands
     {
         private ReactiveCollection<IProductionTask> _queue = new ReactiveCollection<IProductionTask>();
         private int _millisecondsPerRefresh = 100;
-        public Vector3 SpawnPosition { get;}
+        private IBuilding _building;
 
-        public ProduceUnitCommandExecutor(Vector3 spawnPosition)
+        public ProduceUnitCommandExecutor(IBuilding building)
         {
-            SpawnPosition = spawnPosition;
+            _building = building;
             Observable.EveryUpdate().Subscribe(_ => Tick());
         }
         
@@ -32,7 +32,7 @@ namespace Commands
             innerTask.TimeProduce -= Time.deltaTime;
             if (innerTask.TimeProduce <= 0)
             {
-                var unit = Object.Instantiate(innerTask.UnitObject, SpawnPosition, Quaternion.identity);
+                var unit = Object.Instantiate(innerTask.UnitObject, _building.UnitSpawnPosition, Quaternion.identity);
                 unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit.GetComponent<NavMeshAgent>()), new AttackCommandExecutor(unit.transform), new PatrolCommandExecutor(unit.GetComponent<NavMeshAgent>()));
                 RemoveTaskAtIndex(0);
             }

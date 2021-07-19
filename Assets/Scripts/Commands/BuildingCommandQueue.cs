@@ -1,7 +1,6 @@
 using System;
 using Abstractions;
 using UniRx;
-using UnityEngine;
 
 
 namespace Commands
@@ -41,6 +40,7 @@ namespace Commands
         private async void ExecuteCommand(ICommand command)
         {
             await _produceCommandExecutor.TryExecute(command);
+            await _unitSpawnPointExecutor.TryExecute(command);
             if (_innerCollection.Count > 0)
             {
                 _innerCollection.RemoveAt(0);

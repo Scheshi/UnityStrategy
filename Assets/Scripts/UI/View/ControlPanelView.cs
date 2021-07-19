@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abstractions;
+using Commands;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ public class ControlPanelView : MonoBehaviour
     [SerializeField] private Button cancelButton;
     [SerializeField] private Button unitProduceButton;
     [SerializeField] private Button patrolButton;
+    [SerializeField] private Button unitSpawnPointButton;
 
     public IObservable<Unit> AttackClickObservable => attackButton.onClick.AsObservable();
     public IObservable<Unit> MoveClickObservable => moveButton.OnClickAsObservable();
@@ -45,6 +47,10 @@ public class ControlPanelView : MonoBehaviour
             {
                 typeof(CommandExecutorBase<IPatrolCommand>),
                 patrolButton
+            },
+            {
+                typeof(CommandExecutorBase<ISpawnPointCommand>),
+                unitSpawnPointButton
             }
         };
         ClearButtons();

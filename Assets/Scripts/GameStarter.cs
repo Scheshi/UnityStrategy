@@ -42,7 +42,7 @@ public class GameStarter : MonoBehaviour
     {
         _input.Init();
         _startBuildingController = new BuildingController(startBuilding);
-        startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding.transform.position + Vector3.forward * 10));
+        startBuilding.SetExecutors(new ProduceUnitCommandExecutor(startBuilding), new SpawnPointExecutor(startBuilding));
     }
 
     private void OnDestroy()

@@ -33,6 +33,8 @@ namespace Utils
             Container.Bind<CommandCreatorWithCancelled<IMoveCommand, Vector3>>().To<MoveCommandCreator>().AsSingle();
             Container.Bind<CommandCreator<ICancelCommand>>().To<CancelCommandCreator>().AsSingle();
             Container.Bind<CommandCreatorWithCancelled<IPatrolCommand, Vector3>>().To<PatrolCommandCreator>().AsSingle();
+            Container.Bind<CommandCreatorWithCancelled<ISpawnPointCommand, Vector3>>().To<SpawnPointCommandCreator>()
+                .AsSingle();
             Container.Bind<ScriptableModel<IAttackable>>().FromInstance(target).AsSingle();
         }
     }

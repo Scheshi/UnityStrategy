@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Abstractions;
 
+
 namespace Commands
 {
     public class SpawnPointExecutor: CommandExecutorBase<ISpawnPointCommand>

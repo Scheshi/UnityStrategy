@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Abstractions;
+using Commands;
 using UnityEngine;
 using Utils;
 using Zenject;
@@ -15,6 +16,7 @@ namespace UI.Model
         [Inject] private CommandCreator<ICancelCommand> _cancelCommandCreator;
         [Inject] private CommandCreatorWithCancelled<IMoveCommand, Vector3> _moveCommandCreator;
         [Inject] private CommandCreatorWithCancelled<IPatrolCommand, Vector3> _patrolCommandCreator;
+        [Inject] private CommandCreatorWithCancelled<ISpawnPointCommand, Vector3> _changeSpawnPointCommandCreator;
 
         private List<ITick> _tickables = new List<ITick>();
         private bool _isPending;
@@ -53,6 +55,7 @@ namespace UI.Model
             _cancelCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _moveCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _patrolCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
+            _changeSpawnPointCommandCreator.Create(executor, queue.EnqueueCommand, isComplete);
             _isPending = false;
         }
     }
