@@ -13,7 +13,9 @@ namespace Core.Buildings
         [SerializeField] private string itemName;
         [SerializeField] private int maxHealth;
         [SerializeField] private Sprite icon;
-        [SerializeField] private float damage;
+        [SerializeField] private int damage;
+        [SerializeField] private float attackRange;
+        [SerializeField] private float attackCooldown;
         private List<ICommand> _commandQueue;
         private int _currentHealth;
         public ICommandExecutor[] Executors { get; private set; }
@@ -50,6 +52,8 @@ namespace Core.Buildings
 
         public ICommandQueue CommandQueue { get; private set; }
         public GameObject GameObject => gameObject;
-        public float Damage => damage;
+        public int Damage => damage;
+        public float Range => attackRange;
+        public float CoolDown => attackCooldown;
     }
 }

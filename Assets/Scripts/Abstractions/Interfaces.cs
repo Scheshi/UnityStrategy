@@ -21,7 +21,9 @@ namespace Abstractions
 
     public interface IAttacker : ITransformOwner
     {
-        public float Damage { get; }
+        public int Damage { get; }
+        public float Range { get; }
+        public float CoolDown { get; }
     }
     
     public interface ISelectableItem: IAttackable
