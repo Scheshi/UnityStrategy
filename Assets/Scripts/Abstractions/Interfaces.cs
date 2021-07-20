@@ -16,7 +16,14 @@ namespace Abstractions
 
     public interface IAttackable : IHealthOwner, ITransformOwner
     {
-        void Damage(int point);
+        void TakeDamage(int point);
+    }
+
+    public interface IAttacker : ITransformOwner
+    {
+        public int Damage { get; }
+        public float Range { get; }
+        public float CoolDown { get; }
     }
     
     public interface ISelectableItem: IAttackable
@@ -38,7 +45,7 @@ namespace Abstractions
         Vector3 UnitSpawnPosition { get; set; }
     }
 
-    public interface IUnit : ISelectableItem
+    public interface IUnit : ISelectableItem, IAttacker
     {
         
         GameObject GameObject { get; }

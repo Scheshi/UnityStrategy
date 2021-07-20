@@ -1,22 +1,26 @@
 using System.Threading.Tasks;
 using Abstractions;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Commands
 {
     public class AttackCommandExecutor: CommandExecutorBase<IAttackCommand>
     {
-        private Transform _ownerTransform;
+        private IAttacker _attacker;
+        private NavMeshAgent _agent;
         
-        public AttackCommandExecutor(Transform ownerTransform)
+        public AttackCommandExecutor(IAttacker attacker, NavMeshAgent agent)
         {
-            _ownerTransform = ownerTransform;
+            _attacker = attacker;
+            _agent = agent;
         }
         
         protected override async Task ExecuteTypeCommand(IAttackCommand command)
         {
-            Task task = new Task(() => command.Attack(_ownerTransform.position));
-            task.RunSynchronously();
+            command.SetDependency(_attacker, _agent);
+            Task task = new Task(command.StartAttack);
+            task.Start(TaskScheduler.FromCurrentSynchronizationContext());
             await task;
         }
     }

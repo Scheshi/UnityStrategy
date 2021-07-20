@@ -32,7 +32,7 @@ namespace Core.Buildings
         public string Name => itemName;
         public int CurrentHealth => _currentHealth;
         public int MaxHealth => maxHealth;
-        public void Damage(int point)
+        public void TakeDamage(int point)
         {
             _currentHealth -= point;
         }

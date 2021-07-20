@@ -26,7 +26,8 @@ namespace Abstractions
 
     public interface IAttackCommand : ICommand
     {
-        void Attack(Vector3 ownerPosition);
+        void SetDependency(IAttacker attacker, NavMeshAgent agent);
+        void StartAttack();
     }
     public interface ICancelCommand: ICommand{}
 

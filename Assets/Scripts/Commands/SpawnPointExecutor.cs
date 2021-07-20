@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Abstractions;
+using UnityEngine;
 
 
 namespace Commands
@@ -15,6 +16,7 @@ namespace Commands
         
         protected override Task ExecuteTypeCommand(ISpawnPointCommand command)
         {
+            Debug.Log("123");
             _building.UnitSpawnPosition = command.Position;
             return new Task(() => {});
         }

@@ -7,7 +7,7 @@ namespace Commands.Creators
     public sealed class AttackCommandCreator: CommandCreatorWithCancelled<IAttackCommand, IAttackable>
     {
         [Inject]
-        private AttackCommandCreator(ScriptableModel<IAttackable> model)
+        private void InjectDependies(ScriptableModel<IAttackable> model)
         {
             SetAwaitable(model);
         }
