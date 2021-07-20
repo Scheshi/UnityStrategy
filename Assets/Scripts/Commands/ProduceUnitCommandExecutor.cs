@@ -33,7 +33,7 @@ namespace Commands
             if (innerTask.TimeProduce <= 0)
             {
                 var unit = Object.Instantiate(innerTask.UnitObject, _building.UnitSpawnPosition, Quaternion.identity);
-                unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit.GetComponent<NavMeshAgent>()), new AttackCommandExecutor(unit.transform), new PatrolCommandExecutor(unit.GetComponent<NavMeshAgent>()));
+                unit.GetComponent<ISelectableItem>().SetExecutors(new MoveCommandExecutor(unit.GetComponent<NavMeshAgent>()), new AttackCommandExecutor(unit.GetComponent<IAttacker>()), new PatrolCommandExecutor(unit.GetComponent<NavMeshAgent>()));
                 RemoveTaskAtIndex(0);
             }
         }

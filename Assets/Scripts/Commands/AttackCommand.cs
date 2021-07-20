@@ -7,21 +7,27 @@ namespace Commands
     public class AttackCommand: IAttackCommand
     {
         private IAttackable _target;
+        private IAttacker _attacker;
 
         public AttackCommand(IAttackable target)
         {
             _target = target;
         }
-        
-        public void Attack(Vector3 ownerPosition)
+
+        public void SetAttacker(IAttacker attacker)
         {
-            if ((ownerPosition - _target.Transform.position).sqrMagnitude > 64)
+            _attacker = attacker;
+        }
+        
+        public void Attack()
+        {
+            if ((_attacker.Transform.position - _target.Transform.position).sqrMagnitude > 64)
             {
                 Debug.Log("Юнит слишком далеко для атаки");
                 return;
             }
             Debug.Log("Успешная атака");
-            _target.Damage(10);
+            _target.TakeDamage(10);
         }
 
         public void Cancel()

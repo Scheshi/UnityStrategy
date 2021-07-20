@@ -6,8 +6,14 @@ namespace Commands.Creators
 {
     public sealed class AttackCommandCreator: CommandCreatorWithCancelled<IAttackCommand, IAttackable>
     {
+        private IAttacker _currentAttacker;
+        public AttackCommandCreator(IAttacker attacker)
+        {
+            _currentAttacker = attacker;
+        }
+
         [Inject]
-        private AttackCommandCreator(ScriptableModel<IAttackable> model)
+        private void InjectDependies(ScriptableModel<IAttackable> model)
         {
             SetAwaitable(model);
         }

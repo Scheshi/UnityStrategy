@@ -6,16 +6,17 @@ namespace Commands
 {
     public class AttackCommandExecutor: CommandExecutorBase<IAttackCommand>
     {
-        private Transform _ownerTransform;
+        private IAttacker _attacker;
         
-        public AttackCommandExecutor(Transform ownerTransform)
+        public AttackCommandExecutor(IAttacker attacker)
         {
-            _ownerTransform = ownerTransform;
+            _attacker = attacker;
         }
         
         protected override async Task ExecuteTypeCommand(IAttackCommand command)
         {
-            Task task = new Task(() => command.Attack(_ownerTransform.position));
+            command.SetAttacker(_attacker);
+            Task task = new Task(command.Attack);
             task.RunSynchronously();
             await task;
         }
