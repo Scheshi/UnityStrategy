@@ -23,14 +23,15 @@ namespace Commands
 
         public AttackCommand(IAttackable target)
         {
+            if (target == null) return;
             _target = target;
             Observable.EveryUpdate().Subscribe(item =>
             {
                 _attackerPosition = _attacker.Transform.position;
                 _targetPosition = _target.Transform.position;
             });
-            _subjectPosition.SubscribeOn(Scheduler.MainThread).Subscribe(Move);
-            _subjectAttackable.SubscribeOn(Scheduler.MainThread).Subscribe(Attack);
+            _subjectPosition.ObserveOn(Scheduler.MainThread).Subscribe(Move);
+            _subjectAttackable.ObserveOn(Scheduler.MainThread).Subscribe(Attack);
         }
 
         public void SetDependency(IAttacker attacker, NavMeshAgent navMeshAgent)
@@ -76,7 +77,7 @@ namespace Commands
             {
                 if (_command._attacker == null ||
                     _command._target == null) return;
-                _command._subjectCancellable.SubscribeOn(Scheduler.CurrentThread).Subscribe(Cancellable);
+                _command._subjectCancellable.ObserveOn(Scheduler.CurrentThread).Subscribe(Cancellable);
                 while (_isContinue)
                 {
                     if ((_command._attackerPosition - _command._targetPosition).sqrMagnitude <
