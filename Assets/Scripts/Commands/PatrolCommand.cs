@@ -1,62 +1,101 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Abstractions;
+using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
-using Utils;
 
 
 namespace Commands
 {
-    public class PatrolCommand: IPatrolCommand
+    public class PatrolCommand: IPatrolCommand, IDisposable
     {
-        private Vector3 _startPoint;
-        private Vector3 _endPoint;
-        private CancellationTokenSource _cancellationToken;
-        private CancellationModel _cancellation;
+        class PatrolOperation: IDisposable
+        {
+            private bool _isDispose;
+            private Vector3 _startPoint;
+            private Vector3 _endPoint;
+            private bool _toEnd;
+            private PatrolCommand _command;
+            public PatrolOperation(PatrolCommand command, Vector3 startPoint, Vector3 endPoint)
+            {
+                _isDispose = false;
+                _command = command;
+                _startPoint = startPoint;
+                _endPoint = endPoint;
+                Thread thread = new Thread(PatrolCoroutine);
+                thread.Start();
+            }
+
+            private void PatrolCoroutine()
+            {
+                _command._toPosition.OnNext(_endPoint);
+                while (!_isDispose)
+                {
+                    while (Mathf.Abs(_command._currentPoint.x - _endPoint.x) > 0.1f &&
+                           Mathf.Abs(_command._currentPoint.z - _endPoint.z) > 0.1f)
+                    {
+                        Thread.Sleep(100);
+                    }
+
+                    (_startPoint, _endPoint) = (_endPoint, _startPoint);
+                    _command._toPosition.OnNext(_endPoint);
+                }
+            }
+
+            public void Dispose()
+            {
+                _isDispose = true;
+            }
+        }
+        
+        private Vector3 _currentPoint;
         private bool _isCommandPending;
+        private Subject<Vector3> _toPosition = new Subject<Vector3>();
+        private readonly Vector3 _endPoint;
+        private Vector3 _startPoint;
+        private PatrolOperation _operation;
+        private NavMeshAgent _agent;
+        private IDisposable _updater;
+        
 
 
-        public PatrolCommand(Vector3 endPoint, CancellationModel model)
+        public PatrolCommand(Vector3 endPoint)
         {
             _endPoint = endPoint;
-            _cancellation = model;
-            model.OnChangeValue += Cancel;
+            _toPosition.ObserveOn(Scheduler.MainThread).Subscribe(Move);
         }
 
         public void Cancel()
         {
-            _isCommandPending = false;
+            Debug.Log(nameof(Cancel));
+            Dispose();
         }
 
         public void SetStartPosition(Vector3 startPosition)
         {
             _startPoint = startPosition;
-            _isCommandPending = true;
         }
 
-        public async Task Patrol(NavMeshAgent agent)
+        public void Patrol(NavMeshAgent agent)
         {
-            _cancellationToken = new CancellationTokenSource();
-            agent.SetDestination(_endPoint);
-               
-            try
-            {
-                while (Mathf.Abs(agent.transform.position.x - _endPoint.x) > 0.1f &&
-                       Mathf.Abs(agent.transform.position.z - _endPoint.z) > 0.1f && _isCommandPending)
-                    {
-                        await Task.Yield();
-                    }
-                    (_startPoint, _endPoint) = (_endPoint, _startPoint);
-                    await Patrol(agent);
-            }
-            catch(Exception e)
-            {
-                agent.SetDestination(agent.transform.position);
-                Debug.LogErrorFormat(e.Message);
-            }
+            _agent = agent;
+            _isCommandPending = true;
+            _updater = Observable.EveryUpdate().Subscribe(item => { _currentPoint = _agent.transform.position; });
+            _operation = new PatrolOperation(this, _startPoint, _endPoint);
+        }
+
+        private void Move(Vector3 point)
+        {
+            _agent.SetDestination(point);
+        }
+
+        public void Dispose()
+        {
+            _isCommandPending = false;
+            _updater?.Dispose();
+            _operation?.Dispose();
         }
     }
 

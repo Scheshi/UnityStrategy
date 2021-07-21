@@ -40,7 +40,7 @@ namespace Abstractions
     {
         void SetStartPosition(Vector3 startPosition);
         
-        Task Patrol(NavMeshAgent movingTransform);
+        void Patrol(NavMeshAgent movingTransform);
     }
 
 

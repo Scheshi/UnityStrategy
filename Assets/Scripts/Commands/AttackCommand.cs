@@ -52,7 +52,6 @@ namespace Commands
         
         private void Attack(IAttackable attackable)
         {
-            
             _agent.ResetPath();
             attackable.TakeDamage(_attacker.Damage);
         }
