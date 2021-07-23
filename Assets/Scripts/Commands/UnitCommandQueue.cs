@@ -54,6 +54,7 @@ namespace Commands
                 }
 
                 _isPending = false;
+                Debug.Log(_isPending);
                 CheckTheQueue();
             }
         }
