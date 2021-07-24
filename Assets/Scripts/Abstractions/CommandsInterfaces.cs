@@ -7,6 +7,7 @@ namespace Abstractions
 {
     public interface ICommand
     {
+        int CommandImportance { get; }
         void Cancel();
     }
 
@@ -24,7 +25,7 @@ namespace Abstractions
         string UnitName { get; }
     }
 
-    public interface IAttackCommand : ICommand
+    public interface IAttackCommand : ICommand, IAwaitable<AsyncUtils.VoidObject>
     {
         void SetDependency(IAttacker attacker, NavMeshAgent agent);
         void StartAttack();

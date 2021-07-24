@@ -48,6 +48,7 @@ namespace Commands
                 await _moveCommandExecutor.TryExecute(command);
                 await _patrolCommandExecutor.TryExecute(command);
                 await _attackCommandExecutor.TryExecute(command);
+                Debug.Log(nameof(ExecuteCommand));
                 if (_innerCollection.Count > 0)
                 {
                     _innerCollection.RemoveAt(0);
@@ -64,6 +65,15 @@ namespace Commands
             if (_innerCollection.Count > 0)
             {
                 ExecuteCommand(_innerCollection[0]);
+            }
+        }
+
+        public int GetCommandImportance
+        {
+            get
+            {
+                if (_innerCollection == null) return 0;
+                return _innerCollection[0].CommandImportance;
             }
         }
 

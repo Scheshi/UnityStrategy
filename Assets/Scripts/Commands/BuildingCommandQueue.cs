@@ -56,6 +56,15 @@ namespace Commands
             }
         }
 
+        public int GetCommandImportance
+        {
+            get
+            {
+                if (_innerCollection[0] == null) return 0;
+                return _innerCollection[0].CommandImportance;
+            }
+        }
+
         public void EnqueueCommand(ICommand wrappedCommand)
         {
             _innerCollection.Add(wrappedCommand);

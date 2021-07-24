@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Utils;
 
 namespace Abstractions
 {
@@ -7,6 +8,11 @@ namespace Abstractions
     {
         int CurrentHealth { get; }
         int MaxHealth { get; }
+    }
+
+    public interface IPositionOwner
+    {
+        Vector3 CurrentPosition { get; }
     }
 
     public interface ITransformOwner
@@ -21,6 +27,7 @@ namespace Abstractions
 
     public interface IAttacker : ITransformOwner
     {
+        public int VisionRange { get; }
         public int Damage { get; }
         public float Range { get; }
         public float CoolDown { get; }
@@ -40,12 +47,18 @@ namespace Abstractions
         void SetExecutors(params ICommandExecutor[] executors);
     }
 
-    public interface IBuilding : ISelectableItem
+    public interface IBuilding : ISelectableItem, ITeamOwner
     {
         Vector3 UnitSpawnPosition { get; set; }
     }
+    
+    public interface ITeamOwner
+    {
+        Team Team { get; }
+        public void SetTeam(Team team);
+    }
 
-    public interface IUnit : ISelectableItem, IAttacker
+    public interface IUnit : ISelectableItem, IAttacker, IPositionOwner, ITeamOwner
     {
         
         GameObject GameObject { get; }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Abstractions;
 using UniRx;
@@ -7,7 +8,7 @@ using UnityEngine.AI;
 
 namespace Commands
 {
-    public class AttackCommand: IAttackCommand
+    public class AttackCommand: IAttackCommand, IAwaitable<AsyncUtils.VoidObject>
     {
         private NavMeshAgent _agent;
         private IAttackable _target;
@@ -56,15 +57,20 @@ namespace Commands
             attackable.TakeDamage(_attacker.Damage);
         }
 
+        public int CommandImportance { get; } = 2;
+
         public void Cancel()
         {
             _subjectCancellable.OnNext(true);
         }
 
-        class AttackOperation
+        public class AttackOperation: IAwaiter<AsyncUtils.VoidObject>
         {
             private AttackCommand _command;
             private bool _isContinue = true;
+            private Action _onComplete;
+            private bool _isComplete;
+            
             public AttackOperation(AttackCommand command)
             {
                 _command = command;
@@ -96,7 +102,29 @@ namespace Commands
             private void Cancellable(bool isContinue)
             {
                 _isContinue = isContinue;
+                if (!isContinue)
+                {
+                    _isComplete = true;
+                    _onComplete.Invoke();
+                }
             }
+
+            public void OnCompleted(Action continuation)
+            {
+                _onComplete = continuation;
+            }
+
+            public bool IsCompleted => _isComplete;
+            public AsyncUtils.VoidObject GetResult()
+            {
+                return new AsyncUtils.VoidObject();
+            }
+        }
+
+        public IAwaiter<AsyncUtils.VoidObject> GetAwaiter()
+        {
+            _currentAttackOperation = new AttackOperation(this);
+            return _currentAttackOperation;
         }
     }
 }

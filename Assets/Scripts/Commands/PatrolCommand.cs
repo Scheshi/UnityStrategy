@@ -67,6 +67,8 @@ namespace Commands
             _toPosition.ObserveOn(Scheduler.MainThread).Subscribe(Move);
         }
 
+        public int CommandImportance { get; } = 1;
+
         public void Cancel()
         {
             Debug.Log(nameof(Cancel));

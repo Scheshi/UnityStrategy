@@ -24,6 +24,8 @@ namespace Commands
             _isPending = true;
         }
 
+        public int CommandImportance { get; } = 3;
+
         public void Cancel()
         {
             _isPending = false;

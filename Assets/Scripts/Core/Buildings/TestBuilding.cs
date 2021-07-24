@@ -4,6 +4,7 @@ using System.Linq;
 using Abstractions;
 using Commands;
 using UnityEngine;
+using Utils;
 using Zenject;
 
 
@@ -19,6 +20,7 @@ namespace Core.Buildings
         [SerializeField] private string itemName;
         [SerializeField] private int maxHealth;
         [SerializeField] private Sprite icon;
+        [SerializeField] private Team team;
         private Material _outlineMaterial;
         private Material[] _defaultMaterials;
         private Meshes[] _meshes;
@@ -92,6 +94,11 @@ namespace Core.Buildings
             }
         }
 
-        
+
+        public Team Team => team;
+        public void SetTeam(Team team)
+        {
+            this.team = team;
+        }
     }
 }

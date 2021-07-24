@@ -4,6 +4,7 @@ using System.Linq;
 using Abstractions;
 using Commands;
 using UnityEngine;
+using Utils;
 
 
 namespace Core.Buildings
@@ -16,8 +17,10 @@ namespace Core.Buildings
         [SerializeField] private int damage;
         [SerializeField] private float attackRange;
         [SerializeField] private float attackCooldown;
+        [SerializeField] private int visionRange;
         private List<ICommand> _commandQueue;
         private int _currentHealth;
+        private Team _team;
         public ICommandExecutor[] Executors { get; private set; }
         public Transform Transform => transform;
         public event Action OnSelect;
@@ -27,6 +30,20 @@ namespace Core.Buildings
         public void TakeDamage(int point)
         {
             _currentHealth -= point;
+            if (_currentHealth <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void Start()
+        {
+            UnitManager.RegisterUnit(this);
+        }
+
+        private void OnDestroy()
+        {
+            UnitManager.UnregisterUnit(this);
         }
 
         public Sprite Icon => icon;
@@ -52,8 +69,22 @@ namespace Core.Buildings
 
         public ICommandQueue CommandQueue { get; private set; }
         public GameObject GameObject => gameObject;
+        public void SetTeam(Team team)
+        {
+            _team = team;
+        }
+
+        public int VisionRange => visionRange;
         public int Damage => damage;
         public float Range => attackRange;
         public float CoolDown => attackCooldown;
+        public Vector3 CurrentPosition { get; private set; }
+
+        private void Update()
+        {
+            CurrentPosition = transform.position;
+        }
+
+        public Team Team => _team;
     }
 }

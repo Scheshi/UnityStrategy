@@ -8,8 +8,10 @@ namespace Commands
         {
             Position = position;
         }
-        
-        
+
+
+        public int CommandImportance { get; } = 5;
+
         public void Cancel()
         {
             Position = Vector3.zero;

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Abstractions;
-using UnityEngine;
 using UnityEngine.AI;
+
 
 namespace Commands
 {
@@ -19,9 +19,7 @@ namespace Commands
         protected override async Task ExecuteTypeCommand(IAttackCommand command)
         {
             command.SetDependency(_attacker, _agent);
-            Task task = new Task(command.StartAttack);
-            task.Start(TaskScheduler.FromCurrentSynchronizationContext());
-            await task;
+            await command;
         }
     }
 }
